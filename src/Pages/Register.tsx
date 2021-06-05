@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";
+import { register as registerApi } from "../api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,8 +47,8 @@ export default function Login() {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (values: { email: string; password: string }) => {
-    console.log(values);
+  const onSubmit = (values: { username: string; password: string }) => {
+    registerApi(values);
   };
 
   return (
@@ -65,14 +66,14 @@ export default function Login() {
             noValidate
           >
             <TextField
-              {...register("email")}
+              {...register("username")}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
