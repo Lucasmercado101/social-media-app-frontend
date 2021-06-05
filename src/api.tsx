@@ -42,3 +42,7 @@ export function createPost(data: createPostParams) {
 export function getPosts() {
   return axios.get<Note[]>("/user/posts").then((resp) => resp.data);
 }
+
+export function getFeed() {
+  return axios.get<Note[]>("/user/feed").then((resp) => resp.data);
+}
