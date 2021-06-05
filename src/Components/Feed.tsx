@@ -1,12 +1,13 @@
 import Post from "./Post";
 import { makeStyles } from "@material-ui/core";
-import { subSeconds } from "date-fns";
+import { subDays } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   feedColumn: {
     display: "flex",
     flexDirection: "column",
-    gap: 15
+    gap: 15,
+    paddingBottom: 15
   }
 }));
 
@@ -44,7 +45,7 @@ function Feed() {
       {dummyData.map(({ profilePic, id, username, body, contentImage }) => (
         <Post
           username={username}
-          date={subSeconds(new Date(), 2 * id)}
+          date={subDays(new Date(), 4 * id)}
           key={id}
           body={body}
           image={contentImage}
