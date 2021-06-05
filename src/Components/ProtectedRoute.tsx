@@ -13,7 +13,7 @@ const ProtectedRoute: React.FC<RouteProps> = (props) => {
     } else {
       history.push("/login");
     }
-  }, []);
+  }, [history]);
 
   return <Route {...props} />;
 };
