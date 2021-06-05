@@ -2,6 +2,8 @@ import Post from "./Post";
 import { makeStyles } from "@material-ui/core";
 import { subDays } from "date-fns";
 import NewPost from "./NewPost/NewPost";
+import { useQuery } from "react-query";
+import { getFeed } from "../api";
 
 const useStyles = makeStyles((theme) => ({
   feedColumn: {
@@ -39,6 +41,7 @@ const dummyData = [
 ];
 
 function Feed() {
+  const { data = [] } = useQuery("feed", getFeed);
   const classes = useStyles();
 
   return (
