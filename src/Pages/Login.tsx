@@ -64,7 +64,10 @@ export default function Login() {
   const history = useHistory();
   const [state, send] = useMachine(loginMachine, {
     actions: {
-      onDone: () => history.replace("/home")
+      onDone: () => {
+        localStorage.setItem("isAuthenticated", "true");
+        history.replace("/home");
+      }
     }
   });
 
