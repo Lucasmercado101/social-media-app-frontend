@@ -11,7 +11,7 @@ import {
   Box
 } from "@material-ui/core";
 import clsx from "clsx";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { createPost } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,8 +50,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NewPost() {
-  const createPostMutation = useMutation((content: string) =>
-    createPost({ content })
+  const queryClient = useQueryClient();
+  const createPostMutation = useMutation(
+    (content: string) => createPost({ content }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("feed");
+      }
+    }
   );
   const [state, send] = useMachine(newPostMachine, {
     actions: {
@@ -78,10 +84,7 @@ function NewPost() {
 
   if (state.matches("creating_new_post"))
     return (
-      <Paper
-        component="form"
-        className={clsx(classes.container, classes.creatingNoteContainer)}
-      >
+      <Paper className={clsx(classes.container, classes.creatingNoteContainer)}>
         <TextField
           value={state.context.content}
           onChange={(e) =>
@@ -101,7 +104,6 @@ function NewPost() {
             onClick={() => send({ type: "discard" })}
             variant="outlined"
             className={classes.discardBtn}
-            type="button"
           >
             Discard
           </Button>
@@ -113,7 +115,6 @@ function NewPost() {
             disabled={state.context.content.length < 1}
             variant="contained"
             color="primary"
-            type="submit"
           >
             Share
           </Button>
