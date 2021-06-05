@@ -4,6 +4,11 @@ export const newPostMachine = Machine({
   id: "new-post",
   initial: "idle",
   states: {
-    idle: {}
+    idle: {
+      on: {
+        start_creating_new_post: "creating_new_post"
+      }
+    },
+    creating_new_post: {}
   }
 });
