@@ -28,5 +28,5 @@ interface createPostParams {
 }
 
 export function createPost(data: createPostParams) {
-  return axios.post("/user/posts", data).then((resp) => console.log(resp));
+  return axios.post("/user/posts", data).then((resp) => resp.data);
 }
