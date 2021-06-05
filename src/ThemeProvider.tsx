@@ -8,7 +8,7 @@ const Theme: React.FC = ({ children }) => {
   const theme = createMuiTheme({
     palette: {
       type: darkMode ? "dark" : "light",
-      primary: { main: blue[300] }
+      ...(darkMode ? { primary: { main: blue[300] } } : {})
     }
   });
 
