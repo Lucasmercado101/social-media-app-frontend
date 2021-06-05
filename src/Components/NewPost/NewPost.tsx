@@ -41,7 +41,11 @@ const useStyles = makeStyles((theme) => ({
 
 function NewPost() {
   const classes = useStyles();
-  const [state, send] = useMachine(newPostMachine);
+  const [state, send] = useMachine(newPostMachine, {
+    actions: {
+      onDone: ({ content }) => console.log(content)
+    }
+  });
 
   if (state.matches("idle"))
     return (
@@ -61,12 +65,27 @@ function NewPost() {
   if (state.matches("creating_new_post"))
     return (
       <Paper className={clsx(classes.container, classes.creatingNoteContainer)}>
-        <TextField placeholder="Share your thoughts..." autoFocus multiline />
+        <TextField
+          value={state.context.content}
+          onChange={(e) => send({ type: "typed", content: e.target.value })}
+          placeholder="Share your thoughts..."
+          autoFocus
+          multiline
+        />
         <Box display="flex" pt={2} justifyContent="space-between">
-          <Button variant="outlined" className={classes.discardBtn}>
+          <Button
+            onClick={() => send({ type: "discard" })}
+            variant="outlined"
+            className={classes.discardBtn}
+          >
             Discard
           </Button>
-          <Button variant="contained" color="primary">
+          <Button
+            onClick={() => send({ type: "done" })}
+            disabled={state.context.content.length < 1}
+            variant="contained"
+            color="primary"
+          >
             Share
           </Button>
         </Box>
