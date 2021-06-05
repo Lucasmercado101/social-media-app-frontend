@@ -49,7 +49,7 @@ export default function Login() {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (values: { email: string; password: string }) => {
+  const onSubmit = (values: { username: string; password: string }) => {
     console.log(values);
   };
 
@@ -70,14 +70,14 @@ export default function Login() {
             noValidate
           >
             <TextField
-              {...register("email")}
+              {...register("username")}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
