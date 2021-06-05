@@ -13,18 +13,21 @@ export const newPostMachine = Machine<context>(
     },
     states: {
       idle: {
-        entry: "emptyContent",
         on: {
           start_creating_new_post: "creating_new_post"
         }
       },
       creating_new_post: {
+        entry: "emptyContent",
         on: {
           typed: {
             actions: "typedContent"
           },
           discard: "idle",
-          done: "done"
+          done: {
+            target: "done",
+            actions: "setToPostText"
+          }
         }
       },
       done: {
@@ -36,7 +39,7 @@ export const newPostMachine = Machine<context>(
   {
     actions: {
       typedContent: assign({ content: (_, e) => e.content }),
-      emptyContent: assign({ content: "" })
+      emptyContent: assign((_) => ({ content: "" }))
     }
   }
 );
