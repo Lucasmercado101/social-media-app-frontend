@@ -5,6 +5,7 @@ import {
   CardMedia,
   CardContent
 } from "@material-ui/core";
+import { formatRelative } from "date-fns";
 
 function prettyDate(date: Date) {
   const delta = +Date.now() - +date;
@@ -28,6 +29,8 @@ function prettyDate(date: Date) {
     return Math.floor(delta / hour) + " hours ago.";
   } else if (delta < day * 2) {
     return "yesterday";
+  } else {
+    return formatRelative(date, Date.now());
   }
 }
 
