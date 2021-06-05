@@ -18,3 +18,7 @@ interface loginParams {
 export function logIn(data: loginParams) {
   return axios.post("/auth/login", data);
 }
+
+export function isLoggedIn() {
+  return axios.get("/auth/is-logged-in");
+}
