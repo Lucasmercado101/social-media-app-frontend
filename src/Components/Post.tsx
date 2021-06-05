@@ -3,7 +3,8 @@ import {
   Card,
   CardHeader,
   CardMedia,
-  CardContent
+  CardContent,
+  makeStyles
 } from "@material-ui/core";
 import { formatRelative } from "date-fns";
 
@@ -34,6 +35,14 @@ function prettyDate(date: Date) {
   }
 }
 
+const useStyles = makeStyles((theme) => ({
+  postContainer: {
+    [theme.breakpoints.only("xs")]: {
+      borderRadius: 0
+    }
+  }
+}));
+
 interface postProps {
   profilePictureUrl?: string;
   username: string;
@@ -48,8 +57,9 @@ const Post: React.FC<postProps> = ({
   image,
   body
 }) => {
+  const classes = useStyles();
   return (
-    <Card>
+    <Card className={classes.postContainer}>
       <CardHeader
         avatar={<Avatar src={profilePictureUrl} />}
         title={username}
