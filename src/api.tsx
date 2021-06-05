@@ -22,3 +22,11 @@ export function logIn(data: loginParams) {
 export function isLoggedIn() {
   return axios.get("/auth/is-logged-in");
 }
+
+interface createPostParams {
+  content: string;
+}
+
+export function createPost(data: createPostParams) {
+  return axios.post("/user/posts", data).then((resp) => console.log(resp));
+}
