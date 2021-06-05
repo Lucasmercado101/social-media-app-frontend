@@ -10,3 +10,11 @@ interface registerParams {
 export function register(data: registerParams) {
   return axios.post("/auth/register", data);
 }
+
+interface loginParams {
+  username: string;
+  password: string;
+}
+export function logIn(data: loginParams) {
+  return axios.post("/auth/login", data);
+}
