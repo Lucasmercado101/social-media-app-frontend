@@ -13,8 +13,7 @@ function prettyDate(date: Date) {
 
   const minute = 60,
     hour = minute * 60,
-    day = hour * 24,
-    week = day * 7;
+    day = hour * 24;
 
   if (delta < 30) {
     return "just now.";
