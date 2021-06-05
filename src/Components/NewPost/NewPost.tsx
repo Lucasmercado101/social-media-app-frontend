@@ -36,16 +36,25 @@ const useStyles = makeStyles((theme) => ({
   discardBtn: {
     color: theme.palette.error.main,
     borderColor: theme.palette.error.main
-  }
+  },
+  contentLimitIndicator: ({ contentLength }: { contentLength: number }) => ({
+    opacity: contentLength > 250 ? contentLength / 400 : 0,
+    transition: "opacity 250ms, color 250ms",
+    color:
+      contentLength > 375
+        ? theme.palette.warning.main
+        : theme.palette.text.primary
+  })
 }));
 
 function NewPost() {
-  const classes = useStyles();
   const [state, send] = useMachine(newPostMachine, {
     actions: {
       onDone: ({ content }) => console.log(content)
     }
   });
+  const contentLength = state.context.content.length;
+  const classes = useStyles({ contentLength });
 
   if (state.matches("idle"))
     return (
@@ -67,12 +76,19 @@ function NewPost() {
       <Paper className={clsx(classes.container, classes.creatingNoteContainer)}>
         <TextField
           value={state.context.content}
-          onChange={(e) => send({ type: "typed", content: e.target.value })}
+          onChange={(e) =>
+            send({ type: "typed", content: e.target.value.substring(0, 400) })
+          }
           placeholder="Share your thoughts..."
           autoFocus
           multiline
         />
-        <Box display="flex" pt={2} justifyContent="space-between">
+        <Box
+          display="flex"
+          alignItems="center"
+          pt={2}
+          justifyContent="space-between"
+        >
           <Button
             onClick={() => send({ type: "discard" })}
             variant="outlined"
@@ -80,6 +96,9 @@ function NewPost() {
           >
             Discard
           </Button>
+          <Typography className={classes.contentLimitIndicator}>
+            {contentLength}/400
+          </Typography>
           <Button
             onClick={() => send({ type: "done" })}
             disabled={state.context.content.length < 1}
