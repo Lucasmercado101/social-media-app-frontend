@@ -1,6 +1,7 @@
 import Post from "./Post";
 import { makeStyles } from "@material-ui/core";
 import { subDays } from "date-fns";
+import NewPost from "./NewPost/NewPost";
 
 const useStyles = makeStyles((theme) => ({
   feedColumn: {
@@ -41,17 +42,22 @@ function Feed() {
   const classes = useStyles();
 
   return (
-    <div className={classes.feedColumn}>
-      {dummyData.map(({ profilePic, id, username, body, contentImage }) => (
-        <Post
-          username={username}
-          date={subDays(new Date(), 4 * id)}
-          key={id}
-          body={body}
-          image={contentImage}
-          profilePictureUrl={profilePic}
-        />
-      ))}
+    <div>
+      <div style={{ marginBottom: 15 }}>
+        <NewPost />
+      </div>
+      <div className={classes.feedColumn}>
+        {dummyData.map(({ profilePic, id, username, body, contentImage }) => (
+          <Post
+            username={username}
+            date={subDays(new Date(), 4 * id)}
+            key={id}
+            body={body}
+            image={contentImage}
+            profilePictureUrl={profilePic}
+          />
+        ))}
+      </div>
     </div>
   );
 }
