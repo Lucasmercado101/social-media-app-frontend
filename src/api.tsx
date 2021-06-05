@@ -23,10 +23,22 @@ export function isLoggedIn() {
   return axios.get("/auth/is-logged-in");
 }
 
+interface Note {
+  authorId: number;
+  content: string;
+  createdAt: string;
+  id: number;
+  updatedAt: string;
+}
+
 interface createPostParams {
   content: string;
 }
 
 export function createPost(data: createPostParams) {
-  return axios.post("/user/posts", data).then((resp) => resp.data);
+  return axios.post<Note>("/user/posts", data).then((resp) => resp.data);
+}
+
+export function getPosts() {
+  return axios.get<Note[]>("/user/posts").then((resp) => resp.data);
 }
