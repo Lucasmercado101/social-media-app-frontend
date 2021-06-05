@@ -8,9 +8,13 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
+import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
+import { loginMachine } from "./loginMachine";
+import { useMachine } from "@xstate/react";
+import { Alert } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,16 +46,27 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  errorAlert: { width: "100%", marginTop: 15 },
+  buttonProgress: {
+    color: theme.palette.secondary.main,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12
   }
 }));
 
 export default function Login() {
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
-
-  const onSubmit = (values: { username: string; password: string }) => {
-    console.log(values);
-  };
+  const history = useHistory();
+  const [state, send] = useMachine(loginMachine, {
+    actions: {
+      onDone: () => history.replace("/home")
+    }
+  });
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -64,8 +79,13 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          <Collapse in={state.matches("error")} className={classes.errorAlert}>
+            <Alert severity="error">{state.context.error}</Alert>
+          </Collapse>
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit((values) =>
+              send({ type: "log_in", data: values })
+            )}
             className={classes.form}
             noValidate
           >
