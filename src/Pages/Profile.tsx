@@ -1,10 +1,10 @@
-import { Avatar, Typography, makeStyles, Box } from "@material-ui/core";
+import { Avatar, Typography, makeStyles, Box, Button } from "@material-ui/core";
 import { getMyUserData } from "../api";
 import { useQuery } from "react-query";
 
 const useStyles = makeStyles((theme) => ({
   avatarRoot: {
-    margin: "auto",
+    margin: "0 auto",
     marginTop: -75,
     width: 150,
     height: 150,
@@ -29,7 +29,7 @@ function Profile() {
   const classes = useStyles({ userBanner: "" });
 
   return (
-    <div>
+    <Box display="flex" flexDirection="column" flexGrow={1}>
       <div className={classes.userBanner} />
       <Avatar
         classes={{ root: classes.avatarRoot }}
@@ -40,7 +40,18 @@ function Profile() {
           {data?.username}
         </Typography>
       </Box>
-    </div>
+
+      <Box px={5} my={10} display="flex" flexDirection="column">
+        <Typography align="center" variant="h6">
+          <i>Fill out your profile so people can easily find you.</i>
+        </Typography>
+        <Box clone mx="auto" mt={2}>
+          <Button variant="contained" color="primary">
+            Edit Profile
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
