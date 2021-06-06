@@ -24,10 +24,7 @@ export const newPostMachine = Machine<context>(
             actions: "typedContent"
           },
           discard: "idle",
-          done: {
-            target: "done",
-            actions: "setToPostText"
-          }
+          done: "done"
         }
       },
       done: {
