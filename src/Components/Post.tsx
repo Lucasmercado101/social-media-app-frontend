@@ -44,15 +44,16 @@ const useStyles = makeStyles((theme) => ({
 
 interface postProps {
   profilePictureUrl?: string;
-  username: string;
-  date: Date;
+  // username: string;
+  postedAt: Date;
   image?: string;
   body: string;
+  authorId: number;
 }
 const Post: React.FC<postProps> = ({
-  date,
+  postedAt,
   profilePictureUrl,
-  username,
+  // username,
   image,
   body
 }) => {
@@ -61,8 +62,8 @@ const Post: React.FC<postProps> = ({
     <Card className={classes.postContainer}>
       <CardHeader
         avatar={<Avatar src={profilePictureUrl} />}
-        title={username}
-        subheader={prettyDate(date)}
+        // title={username}
+        subheader={prettyDate(postedAt)}
       />
 
       <CardContent>{body}</CardContent>
