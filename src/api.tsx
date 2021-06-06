@@ -46,3 +46,29 @@ export function getPosts() {
 export function getFeed() {
   return axios.get<Note[]>("/user/feed").then((resp) => resp.data);
 }
+
+interface paginatedExploreResponse {
+  next?: {
+    page: number;
+    limit: number;
+  };
+  previous?: {
+    page: number;
+    limit: number;
+  };
+  results: Note[];
+}
+
+interface getExploreProps {
+  limit: number;
+  page: number;
+}
+export function getExplore({ limit, page }: getExploreProps) {
+  const searchParams = new URLSearchParams({
+    limit: limit + "",
+    page: page + ""
+  });
+  return axios
+    .get<paginatedExploreResponse>(`/user/explore?${searchParams.toString()}`)
+    .then((resp) => resp.data);
+}
