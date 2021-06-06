@@ -82,7 +82,9 @@ function EditProfile() {
             </Box>
             <Typography>Johnathan Doughie</Typography>
           </div>
-          <EditIcon />
+          <IconButton size="small">
+            <EditIcon />
+          </IconButton>
         </Box>
         <Box mt={4} display="flex" justifyContent="space-between">
           <Box clone color="error.main" borderColor="error.main">
