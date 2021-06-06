@@ -4,6 +4,7 @@ import { Route, Redirect, Switch } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
 import Feed from "../Components/Feed";
 import Explore from "../Components/Explore";
+import Profile from "./Profile";
 import PeopleIcon from "@material-ui/icons/People";
 import PersonIcon from "@material-ui/icons/Person";
 import { useHistory } from "react-router-dom";
@@ -20,6 +21,7 @@ function Home() {
         <Switch>
           <Route path={"/home"} exact component={Feed} />
           <Route path={"/home/explore"} exact component={Explore} />
+          <Route path={"/home/profile"} exact component={Profile} />
           <Redirect to="/home" />
         </Switch>
       </div>
@@ -48,8 +50,8 @@ function Home() {
         />
         <BottomNavigationAction
           onClick={() => {
-            if (history.location.pathname !== "/profile")
-              history.push("/profile");
+            if (history.location.pathname !== "/home/profile")
+              history.push("/home/profile");
           }}
           label="Profile"
           icon={<PersonIcon />}
