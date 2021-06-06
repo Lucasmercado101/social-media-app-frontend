@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import { Route, useHistory, RouteProps } from "react-router-dom";
+import { Route, useHistory, RouteProps, useLocation } from "react-router-dom";
 import { isLoggedIn } from "../api";
 
 const ProtectedRoute: React.FC<RouteProps> = (props) => {
   const history = useHistory();
+  const location = useLocation();
   useEffect(() => {
+    console.log("here");
     if (localStorage.getItem("isAuthenticated") === "true") {
       isLoggedIn().catch(() => {
         localStorage.setItem("isAuthenticated", "false");
@@ -13,7 +15,7 @@ const ProtectedRoute: React.FC<RouteProps> = (props) => {
     } else {
       history.push("/login");
     }
-  }, [history]);
+  }, [history, location.pathname]);
 
   return <Route {...props} />;
 };
