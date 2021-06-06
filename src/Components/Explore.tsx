@@ -34,7 +34,6 @@ function Explore() {
     }
   );
   const classes = useStyles();
-  console.log(data);
 
   return (
     <div>
