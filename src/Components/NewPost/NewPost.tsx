@@ -55,7 +55,8 @@ function NewPost() {
     (content: string) => createPost({ content }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["feed", "explore"]);
+        queryClient.invalidateQueries("feed");
+        queryClient.invalidateQueries("explore");
       }
     }
   );
