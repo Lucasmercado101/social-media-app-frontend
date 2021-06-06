@@ -88,7 +88,16 @@ function EditProfile() {
         </Box>
         <Box mt={4} display="flex" justifyContent="space-between">
           <Box clone color="error.main" borderColor="error.main">
-            <Button variant="outlined">Cancel</Button>
+            <Button
+              onClick={() =>
+                history.length > 1
+                  ? history.goBack()
+                  : history.push("/home/profile")
+              }
+              variant="outlined"
+            >
+              Cancel
+            </Button>
           </Box>
           <Button variant="contained" color="primary">
             Confirm
