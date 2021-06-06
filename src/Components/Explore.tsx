@@ -40,10 +40,10 @@ function Explore() {
       <div style={{ marginBottom: 15 }}>
         <NewPost />
       </div>
-      {data &&
-        data.pages.map(({ results }) => (
-          <ul className={classes.exploreColumnList}>
-            {results.map(({ authorId, content, createdAt, id }) => (
+      {data && (
+        <ul className={classes.exploreColumnList}>
+          {data.pages.map(({ results }) =>
+            results.map(({ authorId, content, createdAt, id }) => (
               <li key={id}>
                 <Post
                   authorId={authorId}
@@ -51,9 +51,10 @@ function Explore() {
                   postedAt={new Date(createdAt)}
                 />
               </li>
-            ))}
-          </ul>
-        ))}
+            ))
+          )}
+        </ul>
+      )}
 
       {(isFetching || isFetchingNextPage) && (
         <Box display="flex" justifyContent="center" mt={3}>
