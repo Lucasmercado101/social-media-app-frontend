@@ -6,7 +6,6 @@ const ProtectedRoute: React.FC<RouteProps> = (props) => {
   const history = useHistory();
   const location = useLocation();
   useEffect(() => {
-    console.log("here");
     if (localStorage.getItem("isAuthenticated") === "true") {
       isLoggedIn().catch(() => {
         localStorage.setItem("isAuthenticated", "false");
