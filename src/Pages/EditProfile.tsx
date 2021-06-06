@@ -5,12 +5,15 @@ import {
   Typography,
   useScrollTrigger,
   Box,
-  Avatar
+  Avatar,
+  TextField,
+  Button
 } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useHistory } from "react-router-dom";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
+import EditIcon from "@material-ui/icons/Edit";
 
 function EditProfile() {
   const { register } = useForm();
@@ -67,8 +70,30 @@ function EditProfile() {
             </div>
           </Box>
         </div>
+        <Box
+          mt={2}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <div>
+            <Box clone color="text.secondary">
+              <Typography>Username:</Typography>
+            </Box>
+            <Typography>Johnathan Doughie</Typography>
+          </div>
+          <EditIcon />
+        </Box>
+        <Box mt={4} display="flex" justifyContent="space-between">
+          <Box clone color="error.main" borderColor="error.main">
+            <Button variant="outlined">Cancel</Button>
+          </Box>
+          <Button variant="contained" color="primary">
+            Confirm
+          </Button>
+        </Box>
       </Box>
-      asd
+      {/* <TextField variant="outlined" /> */}
     </div>
   );
 }
