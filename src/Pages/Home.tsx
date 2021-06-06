@@ -3,6 +3,7 @@ import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import { Route, Redirect, Switch } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
 import Feed from "../Components/Feed";
+import Explore from "../Components/Explore";
 import PeopleIcon from "@material-ui/icons/People";
 import PersonIcon from "@material-ui/icons/Person";
 import { useHistory } from "react-router-dom";
@@ -12,12 +13,16 @@ function Home() {
   const history = useHistory();
 
   return (
-    <div>
-      <Switch>
-        <Route path={"/home"} exact component={Feed} />
-        {/* <Route path={`/home/explore`} exact component={Feed} /> */}
-        <Redirect to="/home" />
-      </Switch>
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
+      <div style={{ flexGrow: 1 }}>
+        <Switch>
+          <Route path={"/home"} exact component={Feed} />
+          <Route path={"/home/explore"} exact component={Explore} />
+          <Redirect to="/home" />
+        </Switch>
+      </div>
       <BottomNavigation
         value={navigationValue}
         onChange={(event, newValue) => {
@@ -35,8 +40,8 @@ function Home() {
         />
         <BottomNavigationAction
           onClick={() => {
-            if (history.location.pathname !== "/explore")
-              history.push("/explore");
+            if (history.location.pathname !== "/home/explore")
+              history.push("/home/explore");
           }}
           label="Explore"
           icon={<PeopleIcon />}
