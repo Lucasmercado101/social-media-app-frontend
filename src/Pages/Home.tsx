@@ -36,7 +36,7 @@ function Home() {
     <div
       style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
-      <div style={{ flexGrow: 1 }}>
+      <div style={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
         <Switch>
           <Route path={"/home"} exact component={Feed} />
           <Route path={"/home/explore"} exact component={Explore} />
