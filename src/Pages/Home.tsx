@@ -9,9 +9,28 @@ import PeopleIcon from "@material-ui/icons/People";
 import PersonIcon from "@material-ui/icons/Person";
 import { useHistory } from "react-router-dom";
 
+type locationAsNumberFn = (location: string) => number;
+const locationAsNumber = function (currentLocation) {
+  switch (currentLocation) {
+    case "home":
+      return 0;
+    case "explore":
+      return 1;
+    case "profile":
+    default:
+      return 2;
+  }
+} as locationAsNumberFn;
+
 function Home() {
-  const [navigationValue, setNavigationValue] = useState(0);
   const history = useHistory();
+
+  const pathnames = history.location.pathname.split("/");
+  const location = pathnames[pathnames.length - 1];
+
+  const [navigationValue, setNavigationValue] = useState(() =>
+    locationAsNumber(location)
+  );
 
   return (
     <div
@@ -25,6 +44,7 @@ function Home() {
           <Redirect to="/home" />
         </Switch>
       </div>
+
       <BottomNavigation
         value={navigationValue}
         onChange={(event, newValue) => {
