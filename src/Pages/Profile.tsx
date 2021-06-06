@@ -1,6 +1,7 @@
 import { Avatar, Typography, makeStyles, Box, Button } from "@material-ui/core";
 import { getMyUserData } from "../api";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   avatarRoot: {
@@ -46,7 +47,12 @@ function Profile() {
           <i>Fill out your profile so people can easily find you.</i>
         </Typography>
         <Box clone mx="auto" mt={2}>
-          <Button variant="contained" color="primary">
+          <Button
+            component={Link}
+            to="/home/profile/edit"
+            variant="contained"
+            color="primary"
+          >
             Edit Profile
           </Button>
         </Box>
