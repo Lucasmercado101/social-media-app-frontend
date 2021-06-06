@@ -73,7 +73,7 @@ export function getExplore({ limit, page }: getExploreProps) {
     .then((resp) => resp.data);
 }
 
-interface myUserData {
+export interface myUserData {
   id: number;
   username: string;
   createdAt: string;
