@@ -49,7 +49,7 @@ function Feed() {
       <div style={{ marginBottom: 15 }}>
         <NewPost />
       </div>
-      <div className={classes.feedColumn}>
+      {/* <div className={classes.feedColumn}>
         {dummyData.map(({ profilePic, id, username, body, contentImage }) => (
           <Post
             username={username}
@@ -60,7 +60,7 @@ function Feed() {
             profilePictureUrl={profilePic}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
