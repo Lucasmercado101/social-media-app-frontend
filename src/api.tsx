@@ -72,3 +72,14 @@ export function getExplore({ limit, page }: getExploreProps) {
     .get<paginatedExploreResponse>(`/user/explore?${searchParams.toString()}`)
     .then((resp) => resp.data);
 }
+
+interface myUserData {
+  id: number;
+  username: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export function getMyUserData() {
+  return axios.get<myUserData>("/user").then((resp) => resp.data);
+}
