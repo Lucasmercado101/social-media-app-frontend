@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   AppBar,
   IconButton,
@@ -67,6 +68,7 @@ function EditProfile() {
 }
 
 const Form = ({ userData }: { userData: myUserData }) => {
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
   const [state, send] = useMachine(editProfileMachine, {
     context: {
@@ -78,12 +80,26 @@ const Form = ({ userData }: { userData: myUserData }) => {
     }
   });
 
-  const { firstName, initialFirstName, lastName, initialLastName, error } =
-    state.context;
+  const {
+    firstName,
+    initialFirstName,
+    lastName,
+    initialLastName,
+    error,
+    image,
+    initialImage
+  } = state.context;
 
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     send({ type: "submit" });
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e!.target!.files!.length) {
+      // const image = URL.createObjectURL(e!.target!.files![0]);
+      send({ type: "upload_image", data: e!.target!.files![0] });
+    }
   };
 
   return (
@@ -98,7 +114,15 @@ const Form = ({ userData }: { userData: myUserData }) => {
               paddingTop: "60%"
             }}
           >
+            <Box clone display="none">
+              <input
+                onChange={handleImageUpload}
+                ref={imageInputRef}
+                type="file"
+              />
+            </Box>
             <Avatar
+              onClick={() => imageInputRef.current?.click()}
               style={{
                 maxHeight: 200,
                 position: "absolute",
@@ -107,6 +131,11 @@ const Form = ({ userData }: { userData: myUserData }) => {
                 top: 0,
                 left: 0
               }}
+              src={
+                state.matches({ image: "uploaded_image" })
+                  ? URL.createObjectURL(image)
+                  : initialImage
+              }
             >
               <AddAPhotoIcon style={{ width: "50%", height: "50%" }} />
             </Avatar>
