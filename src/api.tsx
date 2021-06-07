@@ -83,3 +83,11 @@ export interface myUserData {
 export function getMyUserData() {
   return axios.get<myUserData>("/user").then((resp) => resp.data);
 }
+
+interface updateMyUserDataProps {
+  username?: string;
+}
+
+export function updateMyUserData(data: updateMyUserDataProps) {
+  return axios.put("/user", data);
+}
