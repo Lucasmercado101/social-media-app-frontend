@@ -18,7 +18,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import EditIcon from "@material-ui/icons/Edit";
 import { editProfileMachine } from "./editProfileMachine";
 import { useMachine } from "@xstate/react";
-import { getMyUserData, myUserData } from "../api";
+import { getMyUserData, myUserData, updateMyUserData } from "../api";
 import { useQuery } from "react-query";
 
 function EditProfile() {
@@ -65,11 +65,18 @@ function EditProfile() {
 }
 
 const Form = ({ userData }: { userData: myUserData }) => {
-  const [state, send] = useMachine(editProfileMachine);
-  const { username } = state.context;
+  const history = useHistory();
+  const [state, send] = useMachine(editProfileMachine, {
+    context: {
+      initialUsername: userData.username
+    }
+  });
+
+  const { username, initialUsername } = state.context;
 
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
+    updateMyUserData({ username });
   };
 
   return (
@@ -111,7 +118,7 @@ const Form = ({ userData }: { userData: myUserData }) => {
               <Box clone color="text.secondary">
                 <Typography>Username:</Typography>
               </Box>
-              <Typography>Johnathan Doughie</Typography>
+              <Typography>{initialUsername}</Typography>
             </div>
             <IconButton
               onClick={() => send({ type: "start_editing_username" })}
@@ -126,7 +133,7 @@ const Form = ({ userData }: { userData: myUserData }) => {
             <TextField
               name="username"
               variant="outlined"
-              placeholder="Johnathan Doughie"
+              placeholder={initialUsername}
               label="Username"
               autoFocus
               value={username}
@@ -151,7 +158,15 @@ const Form = ({ userData }: { userData: myUserData }) => {
       </Box>
       <Box mt={4} display="flex" justifyContent="space-between">
         <Box clone color="error.main" borderColor="error.main">
-          <Button variant="outlined" type="submit">
+          <Button
+            onClick={() =>
+              history.length > 1
+                ? history.goBack()
+                : history.push("/home/profile")
+            }
+            variant="outlined"
+            type="button"
+          >
             Cancel
           </Button>
         </Box>
