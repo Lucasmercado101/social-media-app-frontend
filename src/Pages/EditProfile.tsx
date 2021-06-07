@@ -137,6 +137,7 @@ const Form = ({ userData }: { userData: myUserData }) => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment
+                    style={{ cursor: "pointer" }}
                     onClick={() => send({ type: "stop_editing_username" })}
                     position="end"
                   >
