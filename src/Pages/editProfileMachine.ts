@@ -6,6 +6,8 @@ interface context {
   initialFirstName: string;
   lastName: string;
   initialLastName: string;
+  image: File | null;
+  initialImage: string;
   error: string;
 }
 
@@ -61,6 +63,28 @@ const lastNameStates = {
   }
 };
 
+const imageStates = {
+  id: "image",
+  initial: "default",
+  states: {
+    default: {},
+    uploaded_image: {}
+  },
+  on: {
+    upload_image: [
+      {
+        target: ".uploaded_image",
+        actions: "setUploadedImage",
+        cond: "uploadedAnImage"
+      },
+      {
+        target: ".uploaded_image",
+        cond: "thereIsAnImageUploaded"
+      }
+    ]
+  }
+};
+
 export const editProfileMachine = Machine<context>(
   {
     id: "register machine",
@@ -70,11 +94,14 @@ export const editProfileMachine = Machine<context>(
       initialFirstName: "",
       lastName: "",
       initialLastName: "",
-      error: ""
+      error: "",
+      image: null,
+      initialImage: ""
     },
     states: {
       firstName: firstNameStates,
       lastName: lastNameStates,
+      image: imageStates,
       updatingProfile: {
         id: "updating status",
         initial: "idle",
@@ -87,7 +114,11 @@ export const editProfileMachine = Machine<context>(
           updating: {
             invoke: {
               src: ({ firstName, lastName }) =>
-                updateMyUserData({ firstName, lastName }),
+                updateMyUserData({
+                  firstName,
+                  lastName,
+                  profilePictureURL: null
+                }),
               onDone: { actions: "onDone" },
               onError: {
                 target: "error",
@@ -119,7 +150,12 @@ export const editProfileMachine = Machine<context>(
       editedFirstName: assign({ firstName: (_, e) => e.value }),
       emptyFirstName: assign({ firstName: (_) => "" }),
       editedLastName: assign({ lastName: (_, e) => e.value }),
-      emptyLastName: assign({ lastName: (_) => "" })
+      emptyLastName: assign({ lastName: (_) => "" }),
+      setUploadedImage: assign({ image: (_, e) => e.data })
+    },
+    guards: {
+      uploadedAnImage: (_, e) => !!e.data,
+      thereIsAnImageUploaded: (ctx) => !!ctx.image
     }
   }
 );
