@@ -18,7 +18,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import EditIcon from "@material-ui/icons/Edit";
 import { editProfileMachine } from "./editProfileMachine";
 import { useMachine } from "@xstate/react";
-import { getMyUserData, myUserData, updateMyUserData } from "../api";
+import { getMyUserData, myUserData } from "../api";
 import { useQuery } from "react-query";
 
 function EditProfile() {
@@ -70,15 +70,18 @@ const Form = ({ userData }: { userData: myUserData }) => {
     context: {
       initialFirstName: userData.firstName,
       initialLastName: userData.lastName
+    },
+    actions: {
+      onDone: () => history.replace("/home/profile")
     }
   });
 
-  const { firstName, initialFirstName, lastName, initialLastName } =
+  const { firstName, initialFirstName, lastName, initialLastName, error } =
     state.context;
 
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
-    updateMyUserData({ firstName, lastName });
+    send({ type: "submit" });
   };
 
   return (
@@ -175,6 +178,8 @@ const Form = ({ userData }: { userData: myUserData }) => {
           Confirm
         </Button>
       </Box>
+      {/* TODO: */}
+      {/* {JSON.stringify(error)} */}
     </Box>
   );
 };
