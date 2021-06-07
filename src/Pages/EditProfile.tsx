@@ -165,6 +165,58 @@ const Form = ({ userData }: { userData: myUserData }) => {
           </Box>
         )}
       </Box>
+      <Box
+        mt={2}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        {state.matches({ lastName: "default" }) && (
+          <>
+            <div>
+              <Box clone color="text.secondary">
+                <Typography>Last name:</Typography>
+              </Box>
+              <Typography>{initialLastName}</Typography>
+            </div>
+            <IconButton
+              onClick={() => send({ type: "start_editing_last_name" })}
+              size="small"
+            >
+              <EditIcon />
+            </IconButton>
+          </>
+        )}
+        {state.matches({ lastName: "editing" }) && (
+          <Box clone width={1}>
+            <TextField
+              variant="outlined"
+              placeholder={initialLastName}
+              label="Last Name"
+              autoFocus
+              value={lastName}
+              onChange={(e) =>
+                send({ type: "edited_last_name", value: e.target.value })
+              }
+              required={true}
+              inputProps={{
+                maxLength: 50
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment
+                    style={{ cursor: "pointer" }}
+                    onClick={() => send({ type: "stop_editing_last_name" })}
+                    position="end"
+                  >
+                    <CloseIcon />
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Box>
+        )}
+      </Box>
       <Collapse in={state.matches({ updatingProfile: "error" })}>
         <Alert severity="error">{error}</Alert>
       </Collapse>

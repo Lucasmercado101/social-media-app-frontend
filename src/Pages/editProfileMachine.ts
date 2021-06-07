@@ -35,6 +35,32 @@ const firstNameStates = {
   }
 };
 
+const lastNameStates = {
+  id: "last name field",
+  initial: "default",
+  states: {
+    default: {
+      on: {
+        start_editing_last_name: "editing"
+      }
+    },
+    editing: {
+      on: {
+        edited_last_name: {
+          target: "editing",
+          actions: "editedLastName"
+        }
+      }
+    }
+  },
+  on: {
+    stop_editing_last_name: {
+      target: ".default",
+      actions: "emptyLastName"
+    }
+  }
+};
+
 export const editProfileMachine = Machine<context>(
   {
     id: "register machine",
@@ -48,6 +74,7 @@ export const editProfileMachine = Machine<context>(
     },
     states: {
       firstName: firstNameStates,
+      lastName: lastNameStates,
       updatingProfile: {
         id: "updating status",
         initial: "idle",
@@ -90,7 +117,9 @@ export const editProfileMachine = Machine<context>(
   {
     actions: {
       editedFirstName: assign({ firstName: (_, e) => e.value }),
-      emptyFirstName: assign({ firstName: (_) => "" })
+      emptyFirstName: assign({ firstName: (_) => "" }),
+      editedLastName: assign({ lastName: (_, e) => e.value }),
+      emptyLastName: assign({ lastName: (_) => "" })
     }
   }
 );
