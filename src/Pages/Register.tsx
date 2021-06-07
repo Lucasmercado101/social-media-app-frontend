@@ -93,9 +93,23 @@ export default function Login() {
               required
               fullWidth
               label="Username"
-              name="username"
-              autoComplete="username"
               autoFocus
+            />
+            <TextField
+              {...register("firstName")}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="First Name"
+            />
+            <TextField
+              {...register("lastName")}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Last Name"
             />
             <TextField
               {...register("password")}
@@ -103,7 +117,6 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="text"
             />
