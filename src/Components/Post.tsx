@@ -49,11 +49,12 @@ interface postProps {
   image?: string;
   body: string;
   authorId: number;
+  author: string;
 }
 const Post: React.FC<postProps> = ({
   postedAt,
   profilePictureUrl,
-  // username,
+  author,
   image,
   body
 }) => {
@@ -62,7 +63,7 @@ const Post: React.FC<postProps> = ({
     <Card className={classes.postContainer}>
       <CardHeader
         avatar={<Avatar src={profilePictureUrl} />}
-        // title={username}
+        title={author}
         subheader={prettyDate(postedAt)}
       />
 

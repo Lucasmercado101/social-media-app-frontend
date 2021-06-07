@@ -43,15 +43,24 @@ function Explore() {
       {data && (
         <ul className={classes.exploreColumnList}>
           {data.pages.map(({ results }) =>
-            results.map(({ authorId, content, createdAt, id }) => (
-              <li key={id}>
-                <Post
-                  authorId={authorId}
-                  body={content}
-                  postedAt={new Date(createdAt)}
-                />
-              </li>
-            ))
+            results.map(
+              ({
+                authorId,
+                content,
+                createdAt,
+                id,
+                User: { firstName, lastName }
+              }) => (
+                <li key={id}>
+                  <Post
+                    author={firstName + " " + lastName}
+                    authorId={authorId}
+                    body={content}
+                    postedAt={new Date(createdAt)}
+                  />
+                </li>
+              )
+            )
           )}
         </ul>
       )}
