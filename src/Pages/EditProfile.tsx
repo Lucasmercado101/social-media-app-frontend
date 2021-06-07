@@ -9,7 +9,8 @@ import {
   TextField,
   Button,
   InputAdornment,
-  CircularProgress
+  CircularProgress,
+  Collapse
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useHistory } from "react-router-dom";
@@ -20,6 +21,7 @@ import { editProfileMachine } from "./editProfileMachine";
 import { useMachine } from "@xstate/react";
 import { getMyUserData, myUserData } from "../api";
 import { useQuery } from "react-query";
+import { Alert } from "@material-ui/lab";
 
 function EditProfile() {
   const { data, isLoading } = useQuery("my user data", getMyUserData, {
@@ -145,6 +147,9 @@ const Form = ({ userData }: { userData: myUserData }) => {
                 send({ type: "edited_first_name", value: e.target.value })
               }
               required={true}
+              inputProps={{
+                maxLength: 50
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment
@@ -160,6 +165,9 @@ const Form = ({ userData }: { userData: myUserData }) => {
           </Box>
         )}
       </Box>
+      <Collapse in={state.matches({ updatingProfile: "error" })}>
+        <Alert severity="error">{error}</Alert>
+      </Collapse>
       <Box mt={4} display="flex" justifyContent="space-between">
         <Box clone color="error.main" borderColor="error.main">
           <Button
