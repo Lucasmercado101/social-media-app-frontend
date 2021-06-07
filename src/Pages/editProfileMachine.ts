@@ -1,32 +1,34 @@
 import { Machine, assign } from "xstate";
 
 interface context {
-  username: string;
-  initialUsername: string;
+  firstName: string;
+  initialFirstName: string;
+  lastName: string;
+  initialLastName: string;
 }
 
-const usernameStates = {
-  id: "username field",
+const firstNameStates = {
+  id: "first name field",
   initial: "default",
   states: {
     default: {
       on: {
-        start_editing_username: "editing"
+        start_editing_first_name: "editing"
       }
     },
     editing: {
       on: {
-        edited_username: {
+        edited_first_name: {
           target: "editing",
-          actions: "editedUsername"
+          actions: "editedFirstName"
         }
       }
     }
   },
   on: {
-    stop_editing_username: {
+    stop_editing_first_name: {
       target: ".default",
-      actions: "emptyUsername"
+      actions: "emptyFirstName"
     }
   }
 };
@@ -36,17 +38,19 @@ export const editProfileMachine = Machine<context>(
     id: "register machine",
     type: "parallel",
     context: {
-      username: "",
-      initialUsername: ""
+      firstName: "",
+      initialFirstName: "",
+      lastName: "",
+      initialLastName: ""
     },
     states: {
-      username: usernameStates
+      firstName: firstNameStates
     }
   },
   {
     actions: {
-      editedUsername: assign({ username: (_, e) => e.value }),
-      emptyUsername: assign({ username: (_) => "" })
+      editedFirstName: assign({ firstName: (_, e) => e.value }),
+      emptyFirstName: assign({ firstName: (_) => "" })
     }
   }
 );
