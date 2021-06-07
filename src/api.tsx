@@ -47,6 +47,13 @@ export function getFeed() {
   return axios.get<Note[]>("/user/feed").then((resp) => resp.data);
 }
 
+interface NoteWithAuthorData extends Note {
+  User: {
+    firstName: string;
+    lastName: string;
+  };
+}
+
 interface paginatedExploreResponse {
   next?: {
     page: number;
@@ -56,7 +63,7 @@ interface paginatedExploreResponse {
     page: number;
     limit: number;
   };
-  results: Note[];
+  results: NoteWithAuthorData[];
 }
 
 interface getExploreProps {
