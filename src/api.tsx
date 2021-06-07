@@ -78,6 +78,8 @@ export interface myUserData {
   username: string;
   createdAt: string;
   updatedAt: string;
+  firstName: string;
+  lastName: string;
 }
 
 export function getMyUserData() {
@@ -85,7 +87,8 @@ export function getMyUserData() {
 }
 
 interface updateMyUserDataProps {
-  username?: string;
+  firstName: string;
+  lastName: string;
 }
 
 export function updateMyUserData(data: updateMyUserDataProps) {
