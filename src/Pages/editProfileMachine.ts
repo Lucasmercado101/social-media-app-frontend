@@ -2,6 +2,7 @@ import { Machine, assign } from "xstate";
 
 interface context {
   username: string;
+  initialUsername: string;
 }
 
 const usernameStates = {
@@ -35,7 +36,8 @@ export const editProfileMachine = Machine<context>(
     id: "register machine",
     type: "parallel",
     context: {
-      username: ""
+      username: "",
+      initialUsername: ""
     },
     states: {
       username: usernameStates
@@ -44,7 +46,7 @@ export const editProfileMachine = Machine<context>(
   {
     actions: {
       editedUsername: assign({ username: (_, e) => e.value }),
-      emptyUsername: assign({ username: "" })
+      emptyUsername: assign({ username: (_) => "" })
     }
   }
 );
