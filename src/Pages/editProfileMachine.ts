@@ -68,6 +68,7 @@ export const editProfileMachine = Machine<context>(
                   error: (_, event) => {
                     const err = event.data;
                     if (err.response) {
+                      if (err.response.data) return err.response.data;
                       // client received an error response (5xx, 4xx)
                       return `Server error: ${err.response.status}`;
                     } else if (err.request) {
