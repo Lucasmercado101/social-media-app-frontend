@@ -68,15 +68,17 @@ const Form = ({ userData }: { userData: myUserData }) => {
   const history = useHistory();
   const [state, send] = useMachine(editProfileMachine, {
     context: {
-      initialUsername: userData.username
+      initialFirstName: userData.firstName,
+      initialLastName: userData.lastName
     }
   });
 
-  const { username, initialUsername } = state.context;
+  const { firstName, initialFirstName, lastName, initialLastName } =
+    state.context;
 
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
-    updateMyUserData({ username });
+    updateMyUserData({ firstName, lastName });
   };
 
   return (
@@ -112,40 +114,39 @@ const Form = ({ userData }: { userData: myUserData }) => {
         justifyContent="space-between"
         alignItems="center"
       >
-        {state.matches({ username: "default" }) && (
+        {state.matches({ firstName: "default" }) && (
           <>
             <div>
               <Box clone color="text.secondary">
-                <Typography>Username:</Typography>
+                <Typography>First name:</Typography>
               </Box>
-              <Typography>{initialUsername}</Typography>
+              <Typography>{initialFirstName}</Typography>
             </div>
             <IconButton
-              onClick={() => send({ type: "start_editing_username" })}
+              onClick={() => send({ type: "start_editing_first_name" })}
               size="small"
             >
               <EditIcon />
             </IconButton>
           </>
         )}
-        {state.matches({ username: "editing" }) && (
+        {state.matches({ firstName: "editing" }) && (
           <Box clone width={1}>
             <TextField
-              name="username"
               variant="outlined"
-              placeholder={initialUsername}
-              label="Username"
+              placeholder={initialFirstName}
+              label="First Name"
               autoFocus
-              value={username}
+              value={firstName}
               onChange={(e) =>
-                send({ type: "edited_username", value: e.target.value })
+                send({ type: "edited_first_name", value: e.target.value })
               }
               required={true}
               InputProps={{
                 endAdornment: (
                   <InputAdornment
                     style={{ cursor: "pointer" }}
-                    onClick={() => send({ type: "stop_editing_username" })}
+                    onClick={() => send({ type: "stop_editing_first_name" })}
                     position="end"
                   >
                     <CloseIcon />
