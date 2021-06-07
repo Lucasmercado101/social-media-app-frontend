@@ -38,7 +38,7 @@ function Profile() {
       />
       <Box mt={1}>
         <Typography align="center" variant="h4">
-          {data?.username}
+          {data?.firstName + " " + data?.lastName}
         </Typography>
       </Box>
 
