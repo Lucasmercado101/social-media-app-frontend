@@ -304,8 +304,6 @@ const Form = ({ userData }: { userData: myUserData }) => {
           )}
         </Button>
       </Box>
-      {/* TODO: */}
-      {/* {JSON.stringify(error)} */}
     </Box>
   );
 };
