@@ -34,7 +34,7 @@ function Profile() {
       <div className={classes.userBanner} />
       <Avatar
         classes={{ root: classes.avatarRoot }}
-        // src="https://picsum.photos/id/257/1000/1000"
+        src={data?.profilePictureURL}
       />
       <Box mt={1}>
         <Typography align="center" variant="h4">
@@ -42,11 +42,24 @@ function Profile() {
         </Typography>
       </Box>
 
-      <Box px={5} my={10} display="flex" flexDirection="column">
-        <Typography align="center" variant="h6">
-          <i>Fill out your profile so people can easily find you.</i>
-        </Typography>
-        <Box clone mx="auto" mt={2}>
+      {!data?.profilePictureURL ? (
+        <Box px={5} my={10} display="flex" flexDirection="column">
+          <Typography align="center" variant="h6">
+            <i>Fill out your profile so people can easily find you.</i>
+          </Typography>
+          <Box clone mx="auto" mt={2}>
+            <Button
+              component={Link}
+              to="/home/profile/edit"
+              variant="contained"
+              color="primary"
+            >
+              Edit Profile
+            </Button>
+          </Box>
+        </Box>
+      ) : (
+        <Box display="flex" justifyContent="center" mt={4}>
           <Button
             component={Link}
             to="/home/profile/edit"
@@ -56,7 +69,7 @@ function Profile() {
             Edit Profile
           </Button>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 }
