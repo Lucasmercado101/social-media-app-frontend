@@ -51,6 +51,7 @@ interface NoteWithAuthorData extends Note {
   User: {
     firstName: string;
     lastName: string;
+    profilePictureURL?: string;
   };
 }
 
