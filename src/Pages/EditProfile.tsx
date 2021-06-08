@@ -49,7 +49,6 @@ function EditProfile() {
               }
               edge="start"
               color="inherit"
-              aria-label="menu"
             >
               <ArrowBackIcon />
             </IconButton>
