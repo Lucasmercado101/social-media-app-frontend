@@ -87,6 +87,7 @@ export interface myUserData {
   updatedAt: string;
   firstName: string;
   lastName: string;
+  profilePictureURL?: string;
 }
 
 export function getMyUserData() {
@@ -96,8 +97,45 @@ export function getMyUserData() {
 interface updateMyUserDataProps {
   firstName: string;
   lastName: string;
+  profilePictureURL: string | null;
 }
 
 export function updateMyUserData(data: updateMyUserDataProps) {
   return axios.put("/user", data);
+}
+
+interface uploadImageToCloudinaryResponse {
+  asset_id: string;
+  public_id: string;
+  version: number;
+  version_id: string;
+  signature: string;
+  width: number;
+  height: number;
+  format: string;
+  resource_type: string;
+  created_at: string;
+  tags: any[];
+  bytes: number;
+  type: string;
+  etag: string;
+  placeholder: false;
+  url: string;
+  secure_url: string;
+  access_mode: string;
+  existing: false;
+  original_filename: string;
+}
+
+export function uploadImageToCloudinary(
+  file: any
+): Promise<uploadImageToCloudinaryResponse> {
+  const formData = new FormData();
+  formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET!);
+  formData.append("file", file);
+
+  return fetch(
+    `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
+    { method: "POST", body: formData }
+  ).then((resp) => resp.json());
 }
