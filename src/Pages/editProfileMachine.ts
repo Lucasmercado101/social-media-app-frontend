@@ -1,5 +1,5 @@
 import { Machine, assign } from "xstate";
-import { updateMyUserData } from "../api";
+import { updateMyUserData, uploadImageToCloudinary } from "../api";
 
 interface context {
   firstName: string;
@@ -7,6 +7,7 @@ interface context {
   lastName: string;
   initialLastName: string;
   image: File | null;
+  imageUrl?: string;
   initialImage: string;
   error: string;
 }
@@ -81,7 +82,11 @@ const imageStates = {
         target: ".uploaded_image",
         cond: "thereIsAnImageUploaded"
       }
-    ]
+    ],
+    remove_image: {
+      target: ".default",
+      actions: "emptyImage"
+    }
   }
 };
 
@@ -96,7 +101,8 @@ export const editProfileMachine = Machine<context>(
       initialLastName: "",
       error: "",
       image: null,
-      initialImage: ""
+      initialImage: "",
+      imageUrl: undefined
     },
     states: {
       firstName: firstNameStates,
@@ -112,31 +118,74 @@ export const editProfileMachine = Machine<context>(
             }
           },
           updating: {
-            invoke: {
-              src: ({ firstName, lastName }) =>
-                updateMyUserData({
-                  firstName,
-                  lastName,
-                  profilePictureURL: null
-                }),
-              onDone: { actions: "onDone" },
-              onError: {
-                target: "error",
-                actions: assign({
-                  error: (_, event) => {
-                    const err = event.data;
-                    if (err.response) {
-                      if (err.response.data) return err.response.data;
-                      // client received an error response (5xx, 4xx)
-                      return `Server error: ${err.response.status}`;
-                    } else if (err.request) {
-                      // client never received a response, or request never left
-                      return "Network error";
-                    } else {
-                      return `An unknown error ocurred`;
-                    }
+            initial: "idle",
+            states: {
+              idle: {
+                always: [
+                  {
+                    target: "uploading_image",
+                    cond: "thereIsAnImageUploaded"
+                  },
+                  {
+                    target: "uploading_all_data"
                   }
-                })
+                ]
+              },
+              uploading_image: {
+                invoke: {
+                  src: ({ image }) => uploadImageToCloudinary(image),
+                  onDone: {
+                    actions: assign({ imageUrl: (_, e) => e.data.url }),
+                    target: "uploading_all_data"
+                  },
+                  onError: {
+                    target: "#updating status.error",
+                    actions: assign({
+                      error: (_, event) => {
+                        const err = event.data;
+                        if (err.response) {
+                          if (err.response.data) return err.response.data;
+                          // client received an error response (5xx, 4xx)
+                          return `Server error: ${err.response.status}`;
+                        } else if (err.request) {
+                          // client never received a response, or request never left
+                          return "Network error";
+                        } else {
+                          return `An unknown error ocurred`;
+                        }
+                      }
+                    })
+                  }
+                }
+              },
+              uploading_all_data: {
+                invoke: {
+                  src: ({ firstName, lastName, imageUrl }) =>
+                    updateMyUserData({
+                      firstName,
+                      lastName,
+                      profilePictureURL: imageUrl ?? null
+                    }),
+                  onDone: { actions: "onDone" },
+                  onError: {
+                    target: "#updating status.error",
+                    actions: assign({
+                      error: (_, event) => {
+                        const err = event.data;
+                        if (err.response) {
+                          if (err.response.data) return err.response.data;
+                          // client received an error response (5xx, 4xx)
+                          return `Server error: ${err.response.status}`;
+                        } else if (err.request) {
+                          // client never received a response, or request never left
+                          return "Network error";
+                        } else {
+                          return `An unknown error ocurred`;
+                        }
+                      }
+                    })
+                  }
+                }
               }
             }
           },
@@ -151,7 +200,8 @@ export const editProfileMachine = Machine<context>(
       emptyFirstName: assign({ firstName: (_) => "" }),
       editedLastName: assign({ lastName: (_, e) => e.value }),
       emptyLastName: assign({ lastName: (_) => "" }),
-      setUploadedImage: assign({ image: (_, e) => e.data })
+      setUploadedImage: assign({ image: (_, e) => e.data }),
+      emptyImage: assign({ image: (_) => null })
     },
     guards: {
       uploadedAnImage: (_, e) => !!e.data,
