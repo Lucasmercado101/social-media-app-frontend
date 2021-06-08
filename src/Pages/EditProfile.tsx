@@ -97,8 +97,9 @@ const Form = ({ userData }: { userData: myUserData }) => {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e!.target!.files!.length) {
-      // const image = URL.createObjectURL(e!.target!.files![0]);
-      send({ type: "upload_image", data: e!.target!.files![0] });
+      const file = e!.target!.files![0];
+      e.target.value = "";
+      send({ type: "upload_image", data: file });
     }
   };
 
@@ -119,6 +120,7 @@ const Form = ({ userData }: { userData: myUserData }) => {
                 onChange={handleImageUpload}
                 ref={imageInputRef}
                 type="file"
+                accept="image/*"
               />
             </Box>
             <Avatar
@@ -142,6 +144,15 @@ const Form = ({ userData }: { userData: myUserData }) => {
           </div>
         </Box>
       </div>
+      <Collapse in={state.matches({ image: "uploaded_image" })}>
+        <Box mt={2} display="flex" justifyContent="center">
+          <Box clone color="error.main" borderColor="error.main">
+            <Button onClick={() => send("remove_image")} variant="outlined">
+              Remove Image
+            </Button>
+          </Box>
+        </Box>
+      </Collapse>
       <Box
         mt={2}
         display="flex"
@@ -263,8 +274,33 @@ const Form = ({ userData }: { userData: myUserData }) => {
             Cancel
           </Button>
         </Box>
-        <Button type="submit" variant="contained" color="primary">
+        <Button
+          disabled={[
+            { updatingProfile: { updating: "uploading_image" } },
+            { updatingProfile: { updating: "uploading_all_data" } }
+          ].some(state.matches)}
+          type="submit"
+          variant="contained"
+          color="primary"
+        >
           Confirm
+          {[
+            { updatingProfile: { updating: "uploading_image" } },
+            { updatingProfile: { updating: "uploading_all_data" } }
+          ].some(state.matches) && (
+            <Box clone color="secondary.main">
+              <CircularProgress
+                size={24}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: -12,
+                  marginLeft: -12
+                }}
+              />
+            </Box>
+          )}
         </Button>
       </Box>
       {/* TODO: */}
