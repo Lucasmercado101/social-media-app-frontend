@@ -1,6 +1,20 @@
-import { Avatar, Typography, makeStyles, Box, Button } from "@material-ui/core";
-import { getMyUserData } from "../api";
+import {
+  Avatar,
+  Typography,
+  makeStyles,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  ListItemSecondaryAction
+} from "@material-ui/core";
+import { getMyUserData, logOut } from "../api";
 import { useQuery } from "react-query";
+import GroupIcon from "@material-ui/icons/Group";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import EditIcon from "@material-ui/icons/Edit";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,6 +56,48 @@ function Profile() {
         </Typography>
       </Box>
 
+      <Box clone mx={2}>
+        <List>
+          <ListItem button>
+            <ListItemIcon>
+              <GroupIcon />
+            </ListItemIcon>
+            <ListItemText primary="Friends" />
+            <ListItemSecondaryAction>
+              <Box display="flex" alignItems="center">
+                <ChevronRightIcon />
+              </Box>
+            </ListItemSecondaryAction>
+          </ListItem>
+
+          <ListItem to="/home/profile/edit" component={Link} button>
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            <ListItemText primary="Edit Profile" />
+            <ListItemSecondaryAction>
+              <Box display="flex" alignItems="center">
+                <ChevronRightIcon />
+              </Box>
+            </ListItemSecondaryAction>
+          </ListItem>
+
+          <ListItem component={Link} to="/" onClick={() => logOut()} button>
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            <ListItemText primary="Log out" />
+            <ListItemSecondaryAction>
+              <Box display="flex" alignItems="center">
+                <ChevronRightIcon />
+              </Box>
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+      </Box>
+
+      {/*       
+
       {!data?.profilePictureURL ? (
         <Box px={5} my={10} display="flex" flexDirection="column">
           <Typography align="center" variant="h6">
@@ -69,7 +125,7 @@ function Profile() {
             Edit Profile
           </Button>
         </Box>
-      )}
+      )} */}
     </Box>
   );
 }
