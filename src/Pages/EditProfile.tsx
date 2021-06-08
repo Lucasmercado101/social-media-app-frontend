@@ -73,7 +73,8 @@ const Form = ({ userData }: { userData: myUserData }) => {
   const [state, send] = useMachine(editProfileMachine, {
     context: {
       initialFirstName: userData.firstName,
-      initialLastName: userData.lastName
+      initialLastName: userData.lastName,
+      initialImage: userData.profilePictureURL
     },
     actions: {
       onDone: () => history.replace("/home/profile")
