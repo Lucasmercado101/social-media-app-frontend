@@ -6,6 +6,7 @@ import Feed from "../Components/Feed";
 import Explore from "../Components/Explore";
 import Profile from "./Profile";
 import EditProfile from "./EditProfile";
+import Friends from "./Friends";
 import PeopleIcon from "@material-ui/icons/People";
 import PersonIcon from "@material-ui/icons/Person";
 import { useHistory } from "react-router-dom";
@@ -43,6 +44,7 @@ function Home() {
           <Route path={"/home/explore"} exact component={Explore} />
           <Route path={"/home/profile"} exact component={Profile} />
           <Route path={"/home/profile/edit"} exact component={EditProfile} />
+          <Route path={"/home/profile/friends"} exact component={Friends} />
           <Redirect to="/home" />
         </Switch>
       </div>
