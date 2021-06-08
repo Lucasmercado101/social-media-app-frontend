@@ -11,8 +11,8 @@ import {
   Box
 } from "@material-ui/core";
 import clsx from "clsx";
-import { useMutation, useQueryClient } from "react-query";
-import { createPost } from "../../api";
+import { useMutation, useQueryClient, useQuery } from "react-query";
+import { createPost, getMyUserData } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NewPost() {
+  const { data } = useQuery("my user data", getMyUserData);
   const queryClient = useQueryClient();
   const createPostMutation = useMutation(
     (content: string) => createPost({ content }),
@@ -71,7 +72,7 @@ function NewPost() {
   if (state.matches("idle"))
     return (
       <Paper className={clsx(classes.container, classes.staticContainer)}>
-        <Avatar />
+        <Avatar src={data?.profilePictureURL} />
         <Typography
           onClick={() => send("start_creating_new_post")}
           component={ButtonBase}
