@@ -49,10 +49,11 @@ function Explore() {
                 content,
                 createdAt,
                 id,
-                User: { firstName, lastName }
+                User: { firstName, lastName, profilePictureURL }
               }) => (
                 <li key={id}>
                   <Post
+                    authorProfilePicture={profilePictureURL}
                     author={firstName + " " + lastName}
                     authorId={authorId}
                     body={content}
