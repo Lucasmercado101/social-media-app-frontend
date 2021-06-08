@@ -56,7 +56,7 @@ function Profile() {
         </Typography>
       </Box>
 
-      <Box clone mx={2}>
+      <Box clone mx={2} mt={2}>
         <List>
           <ListItem button>
             <ListItemIcon>
