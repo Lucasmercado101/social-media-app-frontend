@@ -15,7 +15,7 @@ import GroupIcon from "@material-ui/icons/Group";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import EditIcon from "@material-ui/icons/Edit";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   avatarRoot: {
@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 function Profile() {
   const { data } = useQuery("my user data", getMyUserData);
   const classes = useStyles({ userBanner: "" });
+  const history = useHistory();
 
   return (
     <Box display="flex" flexDirection="column" flexGrow={1}>
@@ -58,7 +59,7 @@ function Profile() {
 
       <Box clone mx={2} mt={2}>
         <List>
-          <ListItem button>
+          <ListItem to="/home/profile/friends" component={Link} button>
             <ListItemIcon>
               <GroupIcon />
             </ListItemIcon>
@@ -82,7 +83,10 @@ function Profile() {
             </ListItemSecondaryAction>
           </ListItem>
 
-          <ListItem component={Link} to="/" onClick={() => logOut()} button>
+          <ListItem
+            onClick={() => logOut().then(() => history.replace("/login"))}
+            button
+          >
             <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>
@@ -95,37 +99,6 @@ function Profile() {
           </ListItem>
         </List>
       </Box>
-
-      {/*       
-
-      {!data?.profilePictureURL ? (
-        <Box px={5} my={10} display="flex" flexDirection="column">
-          <Typography align="center" variant="h6">
-            <i>Fill out your profile so people can easily find you.</i>
-          </Typography>
-          <Box clone mx="auto" mt={2}>
-            <Button
-              component={Link}
-              to="/home/profile/edit"
-              variant="contained"
-              color="primary"
-            >
-              Edit Profile
-            </Button>
-          </Box>
-        </Box>
-      ) : (
-        <Box display="flex" justifyContent="center" mt={4}>
-          <Button
-            component={Link}
-            to="/home/profile/edit"
-            variant="contained"
-            color="primary"
-          >
-            Edit Profile
-          </Button>
-        </Box>
-      )} */}
     </Box>
   );
 }
