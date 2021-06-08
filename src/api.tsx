@@ -140,3 +140,7 @@ export function uploadImageToCloudinary(
     { method: "POST", body: formData }
   ).then((resp) => resp.json());
 }
+
+export function logOut() {
+  return axios.get("/auth/logout");
+}
