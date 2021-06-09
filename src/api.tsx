@@ -23,7 +23,7 @@ export function isLoggedIn() {
   return axios.get("/auth/is-logged-in");
 }
 
-interface Note {
+interface Post {
   authorId: number;
   content: string;
   createdAt: string;
@@ -36,18 +36,18 @@ interface createPostParams {
 }
 
 export function createPost(data: createPostParams) {
-  return axios.post<Note>("/user/posts", data).then((resp) => resp.data);
+  return axios.post<Post>("/user/posts", data).then((resp) => resp.data);
 }
 
 export function getPosts() {
-  return axios.get<Note[]>("/user/posts").then((resp) => resp.data);
+  return axios.get<Post[]>("/user/posts").then((resp) => resp.data);
 }
 
 export function getFeed() {
-  return axios.get<Note[]>("/user/feed").then((resp) => resp.data);
+  return axios.get<Post[]>("/user/feed").then((resp) => resp.data);
 }
 
-interface NoteWithAuthorData extends Note {
+interface PostWithAuthorData extends Post {
   User: {
     firstName: string;
     lastName: string;
@@ -64,7 +64,7 @@ interface paginatedExploreResponse {
     page: number;
     limit: number;
   };
-  results: NoteWithAuthorData[];
+  results: PostWithAuthorData[];
 }
 
 interface getExploreProps {
