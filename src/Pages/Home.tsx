@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import { Route, Redirect, Switch } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
@@ -34,6 +34,10 @@ function Home() {
   const [navigationValue, setNavigationValue] = useState(() =>
     locationAsNumber(location)
   );
+
+  useEffect(() => {
+    setNavigationValue(locationAsNumber(location));
+  }, [history.location.pathname]);
 
   return (
     <div
