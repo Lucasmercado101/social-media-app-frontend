@@ -47,7 +47,7 @@ export function getFeed() {
   return axios.get<Post[]>("/user/feed").then((resp) => resp.data);
 }
 
-interface PostWithAuthorData extends Post {
+interface NoteWithAuthorData extends Post {
   User: {
     firstName: string;
     lastName: string;
@@ -55,7 +55,7 @@ interface PostWithAuthorData extends Post {
   };
 }
 
-interface paginatedExploreResponse {
+interface paginatedResponse<T> {
   next?: {
     page: number;
     limit: number;
@@ -64,7 +64,7 @@ interface paginatedExploreResponse {
     page: number;
     limit: number;
   };
-  results: PostWithAuthorData[];
+  results: T[];
 }
 
 interface getExploreProps {
@@ -77,7 +77,9 @@ export function getExplore({ limit, page }: getExploreProps) {
     page: page + ""
   });
   return axios
-    .get<paginatedExploreResponse>(`/user/explore?${searchParams.toString()}`)
+    .get<paginatedResponse<NoteWithAuthorData>>(
+      `/user/explore?${searchParams.toString()}`
+    )
     .then((resp) => resp.data);
 }
 
@@ -147,4 +149,10 @@ export function logOut() {
 
 export function getPublicUserData(userId: number) {
   return axios.get<userData>(`/users/${userId}`).then((resp) => resp.data);
+}
+
+export function getPublicUserPostsPaginated(userId: number) {
+  return axios
+    .get<userData>(`/users/${userId}/posts`)
+    .then((resp) => resp.data);
 }
