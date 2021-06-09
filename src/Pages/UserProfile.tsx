@@ -9,9 +9,10 @@ import {
   useScrollTrigger
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import { useRouteMatch, useHistory } from "react-router-dom";
-import { getPublicUserData } from "../api";
+import { getPublicUserData, getPublicUserPostsPaginated } from "../api";
+import Post from "../Components/Post";
 
 const useStyles = makeStyles((theme) => ({
   avatarRoot: {
@@ -32,21 +33,51 @@ const useStyles = makeStyles((theme) => ({
       : {
           backgroundColor: theme.palette.primary.dark
         })
-  })
+  }),
+  exploreColumnList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 15,
+    paddingBottom: 15,
+    padding: 0,
+    margin: 0,
+    listStyleType: "none"
+  }
 }));
 
 function UserProfile() {
+  const history = useHistory();
+  const route = useRouteMatch();
+  //@ts-ignore
+  const userId = route.params.userId;
+
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status
+  } = useInfiniteQuery(
+    "explore",
+    ({ pageParam = 1 }) =>
+      getPublicUserPostsPaginated({
+        limit: 15,
+        page: pageParam,
+        userId: userId
+      }),
+    {
+      getNextPageParam: (lastPage) => lastPage.next?.page
+    }
+  );
   //TODO: do something if this profile is the logged in user's one
   // redirect them to their own, and in Post.jsx
   // prevent them from redirecting here
-  const history = useHistory();
-  const route = useRouteMatch();
   const scrolled = useScrollTrigger({
     disableHysteresis: true,
     threshold: 10
   });
-  //@ts-ignore
-  const userId = route.params.userId;
 
   const { data: userData } = useQuery(["user data", userId], () =>
     getPublicUserData(userId)
@@ -82,6 +113,42 @@ function UserProfile() {
           {userData?.firstName + " " + userData?.lastName}
         </Typography>
       </Box>
+
+      <Box my={4}>
+        <Typography
+          style={{ textDecoration: "underline" }}
+          align="center"
+          variant="h5"
+        >
+          Posts:
+        </Typography>
+      </Box>
+
+      {data && (
+        <ul className={classes.exploreColumnList}>
+          {data.pages.map(({ results }) =>
+            results.map(
+              ({
+                authorId,
+                content,
+                createdAt,
+                id,
+                User: { firstName, lastName, profilePictureURL }
+              }) => (
+                <li key={id}>
+                  <Post
+                    authorProfilePicture={profilePictureURL}
+                    author={firstName + " " + lastName}
+                    authorId={authorId}
+                    body={content}
+                    postedAt={new Date(createdAt)}
+                  />
+                </li>
+              )
+            )
+          )}
+        </ul>
+      )}
     </div>
   );
 }
