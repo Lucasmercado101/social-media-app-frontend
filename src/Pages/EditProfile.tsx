@@ -20,7 +20,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import EditIcon from "@material-ui/icons/Edit";
 import { editProfileMachine } from "./editProfileMachine";
 import { useMachine } from "@xstate/react";
-import { getMyUserData, myUserData } from "../api";
+import { getMyUserData, userData } from "../api";
 import { useQuery } from "react-query";
 import { Alert } from "@material-ui/lab";
 
@@ -66,7 +66,7 @@ function EditProfile() {
   );
 }
 
-const Form = ({ userData }: { userData: myUserData }) => {
+const Form = ({ userData }: { userData: userData }) => {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const history = useHistory();
   const [state, send] = useMachine(editProfileMachine, {
