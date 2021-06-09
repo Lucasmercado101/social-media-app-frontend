@@ -58,7 +58,7 @@ function UserProfile() {
               onClick={() =>
                 history.length > 1
                   ? history.goBack()
-                  : history.push("/home/profile")
+                  : history.push("/home/explore")
               }
               edge="start"
               color="inherit"
