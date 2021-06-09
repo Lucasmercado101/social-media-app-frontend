@@ -15,6 +15,7 @@ function prettyDate(date: Date) {
     hour = minute * 60,
     day = hour * 24;
 
+
   if (delta < 30) {
     return "just now.";
   } else if (delta < minute) {
@@ -22,14 +23,15 @@ function prettyDate(date: Date) {
   } else if (delta < 2 * minute) {
     return "a minute ago.";
   } else if (delta < hour) {
-    return Math.floor(delta / minute) + " minutes ago.";
+    return Math.floor(delta / minute) + " seconds ago.";
   } else if (Math.floor(delta / hour) === 1) {
-    return "1 hour ago.";
+    return "1 minute ago.";
   } else if (delta < day) {
-    return Math.floor(delta / hour) + " hours ago.";
-  } else if (delta < day * 2) {
-    return "yesterday";
-  } else {
+    return Math.floor(delta / hour) + " minutes ago.";
+  // } else if (delta < day * 2) {
+  //   return "yesterday";
+  // } else {
+  }else {
     return formatRelative(date, Date.now());
   }
 }
