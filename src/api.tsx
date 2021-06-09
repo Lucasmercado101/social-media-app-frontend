@@ -47,7 +47,7 @@ export function getFeed() {
   return axios.get<Post[]>("/user/feed").then((resp) => resp.data);
 }
 
-interface NoteWithAuthorData extends Post {
+interface PostWithAuthorData extends Post {
   User: {
     firstName: string;
     lastName: string;
@@ -77,7 +77,7 @@ export function getExplore({ limit, page }: getExploreProps) {
     page: page + ""
   });
   return axios
-    .get<paginatedResponse<NoteWithAuthorData>>(
+    .get<paginatedResponse<PostWithAuthorData>>(
       `/user/explore?${searchParams.toString()}`
     )
     .then((resp) => resp.data);
