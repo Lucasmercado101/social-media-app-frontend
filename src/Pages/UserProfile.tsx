@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function UserProfile() {
+  //TODO: do something if this profile is the logged in user's one
+  // redirect them to their own, and in Post.jsx
+  // prevent them from redirecting here
   const history = useHistory();
   const route = useRouteMatch();
   const scrolled = useScrollTrigger({
