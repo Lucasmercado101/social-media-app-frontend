@@ -81,7 +81,7 @@ export function getExplore({ limit, page }: getExploreProps) {
     .then((resp) => resp.data);
 }
 
-export interface myUserData {
+export interface userData {
   id: number;
   username: string;
   createdAt: string;
@@ -92,7 +92,7 @@ export interface myUserData {
 }
 
 export function getMyUserData() {
-  return axios.get<myUserData>("/user").then((resp) => resp.data);
+  return axios.get<userData>("/user").then((resp) => resp.data);
 }
 
 interface updateMyUserDataProps {
@@ -143,4 +143,8 @@ export function uploadImageToCloudinary(
 
 export function logOut() {
   return axios.get("/auth/logout");
+}
+
+export function getPublicUserData(userId: number) {
+  return axios.get<userData>(`/users/${userId}`).then((resp) => resp.data);
 }
