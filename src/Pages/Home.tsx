@@ -9,6 +9,7 @@ import EditProfile from "./EditProfile";
 import Friends from "./Friends";
 import PeopleIcon from "@material-ui/icons/People";
 import PersonIcon from "@material-ui/icons/Person";
+import UserProfile from "./UserProfile";
 import { useHistory } from "react-router-dom";
 
 type locationAsNumberFn = (location: string) => number;
@@ -42,6 +43,8 @@ function Home() {
         <Switch>
           <Route path={"/home"} exact component={Feed} />
           <Route path={"/home/explore"} exact component={Explore} />
+          <Route path={"/home/user/:userId"} exact component={UserProfile} />
+
           <Route path={"/home/profile"} exact component={Profile} />
           <Route path={"/home/profile/edit"} exact component={EditProfile} />
           <Route path={"/home/profile/friends"} exact component={Friends} />
