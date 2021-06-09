@@ -7,6 +7,7 @@ import {
   makeStyles
 } from "@material-ui/core";
 import { formatRelative } from "date-fns";
+import {Link} from "react-router-dom"
 
 function prettyDate(date: Date) {
   const delta = +Date.now() - +date;
@@ -57,13 +58,14 @@ const Post: React.FC<postProps> = ({
   authorProfilePicture,
   author,
   image,
+  authorId,
   body
 }) => {
   const classes = useStyles();
   return (
     <Card className={classes.postContainer}>
       <CardHeader
-        avatar={<Avatar src={authorProfilePicture} />}
+        avatar={<Link to={`/home/user/${authorId}`}><Avatar src={authorProfilePicture} /></Link>}
         title={author}
         subheader={prettyDate(postedAt)}
       />
