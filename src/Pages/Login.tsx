@@ -90,7 +90,6 @@ export default function Login() {
               send({ type: "log_in", data: values })
             )}
             className={classes.form}
-            noValidate
           >
             <TextField
               {...register("username")}
