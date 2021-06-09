@@ -15,7 +15,7 @@ function prettyDate(date: Date) {
     hour = minute * 60,
     day = hour * 24;
 
-
+//TODO: show relative-to-date properly
   if (delta < 30) {
     return "just now.";
   } else if (delta < minute) {
