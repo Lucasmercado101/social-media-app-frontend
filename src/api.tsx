@@ -150,9 +150,23 @@ export function logOut() {
 export function getPublicUserData(userId: number) {
   return axios.get<userData>(`/users/${userId}`).then((resp) => resp.data);
 }
-
-export function getPublicUserPostsPaginated(userId: number) {
+interface getPublicUserPostsPaginatedProps {
+  limit: number;
+  page: number;
+  userId: number;
+}
+export function getPublicUserPostsPaginated({
+  limit,
+  page,
+  userId
+}: getPublicUserPostsPaginatedProps) {
+  const searchParams = new URLSearchParams({
+    limit: limit + "",
+    page: page + ""
+  });
   return axios
-    .get<userData>(`/users/${userId}/posts`)
+    .get<paginatedResponse<PostWithAuthorData>>(
+      `/users/${userId}/posts?${searchParams.toString()}`
+    )
     .then((resp) => resp.data);
 }
