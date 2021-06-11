@@ -11,6 +11,8 @@ import PeopleIcon from "@material-ui/icons/People";
 import PersonIcon from "@material-ui/icons/Person";
 import UserProfile from "./UserProfile";
 import { useHistory } from "react-router-dom";
+import { useQueryClient } from "react-query";
+import { getMyUserData } from "../api";
 
 type locationAsNumberFn = (location: string) => number;
 const locationAsNumber = function (currentLocation) {
@@ -26,6 +28,7 @@ const locationAsNumber = function (currentLocation) {
 } as locationAsNumberFn;
 
 function Home() {
+  const queryClient = useQueryClient();
   const history = useHistory();
 
   const pathnames = history.location.pathname.split("/");
@@ -37,6 +40,7 @@ function Home() {
 
   useEffect(() => {
     setNavigationValue(locationAsNumber(location));
+    queryClient.prefetchQuery("my user data", getMyUserData);
   }, [history.location.pathname]);
 
   return (
