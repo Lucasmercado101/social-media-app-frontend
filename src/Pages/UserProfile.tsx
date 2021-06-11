@@ -51,15 +51,7 @@ function UserProfile() {
   //@ts-ignore
   const userId = route.params.userId;
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status
-  } = useInfiniteQuery(
+  const { data, isLoading } = useInfiniteQuery(
     ["user posts", userId],
     ({ pageParam = 1 }) =>
       getPublicUserPostsPaginated({
@@ -110,7 +102,9 @@ function UserProfile() {
       />
       <Box mt={1}>
         <Typography align="center" variant="h4">
-          {userData?.firstName + " " + userData?.lastName}
+          {isLoading
+            ? "Loading..."
+            : userData?.firstName + " " + userData?.lastName}
         </Typography>
       </Box>
 
