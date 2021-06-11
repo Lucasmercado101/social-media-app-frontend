@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Profile() {
-  const { data } = useQuery("my user data", getMyUserData);
+  const { data, isLoading } = useQuery("my user data", getMyUserData);
   const classes = useStyles({ userBanner: "" });
   const history = useHistory();
 
@@ -53,7 +53,7 @@ function Profile() {
       />
       <Box mt={1}>
         <Typography align="center" variant="h4">
-          {data?.firstName + " " + data?.lastName}
+          {isLoading ? "Loading..." : data?.firstName + " " + data?.lastName}
         </Typography>
       </Box>
 
