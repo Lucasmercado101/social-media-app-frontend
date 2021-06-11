@@ -86,25 +86,25 @@ const Post: React.FC<postProps> = ({
   const dislikePostMutation = useMutation(() => dislikePost(postId), {
     onSuccess() {
       queryClient.invalidateQueries("explore");
-      queryClient.invalidateQueries(["user posts", authorId]);
+      queryClient.invalidateQueries("user posts");
     }
   });
   const unDislikePostMutation = useMutation(() => unDislikePost(postId), {
     onSuccess() {
       queryClient.invalidateQueries("explore");
-      queryClient.invalidateQueries(["user posts", authorId]);
+      queryClient.invalidateQueries("user posts");
     }
   });
   const likePostMutation = useMutation(() => likePost(postId), {
     onSuccess() {
       queryClient.invalidateQueries("explore");
-      queryClient.invalidateQueries(["user posts", authorId]);
+      queryClient.invalidateQueries("user posts");
     }
   });
   const unLikePostMutation = useMutation(() => unLikePost(postId), {
     onSuccess() {
       queryClient.invalidateQueries("explore");
-      queryClient.invalidateQueries(["user posts", authorId]);
+      queryClient.invalidateQueries("user posts");
     }
   });
 
@@ -155,7 +155,7 @@ const Post: React.FC<postProps> = ({
             <IconButton
               onClick={() => {
                 userDisikedThePost
-                  ? unLikePostMutation.mutate()
+                  ? unDislikePostMutation.mutate()
                   : dislikePostMutation.mutate();
               }}
             >
