@@ -4,10 +4,24 @@ import {
   CardHeader,
   CardMedia,
   CardContent,
-  makeStyles
+  makeStyles,
+  CardActions,
+  IconButton,
+  Typography,
+  Box
 } from "@material-ui/core";
 import { formatRelative } from "date-fns";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import ThumbDownIcon from "@material-ui/icons/ThumbDown";
+import {
+  likePost,
+  unLikePost,
+  dislikePost,
+  unDislikePost,
+  getMyUserData
+} from "../api";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
 function prettyDate(date: Date) {
   const delta = +Date.now() - +date;
@@ -16,7 +30,7 @@ function prettyDate(date: Date) {
     hour = minute * 60,
     day = hour * 24;
 
-//TODO: show relative-to-date properly
+  //TODO: show relative-to-date properly
   if (delta < 30) {
     return "just now.";
   } else if (delta < minute) {
@@ -29,10 +43,10 @@ function prettyDate(date: Date) {
     return "1 minute ago.";
   } else if (delta < day) {
     return Math.floor(delta / hour) + " minutes ago.";
-  // } else if (delta < day * 2) {
-  //   return "yesterday";
-  // } else {
-  }else {
+    // } else if (delta < day * 2) {
+    //   return "yesterday";
+    // } else {
+  } else {
     return formatRelative(date, Date.now());
   }
 }
@@ -52,20 +66,60 @@ interface postProps {
   body: string;
   authorId: number;
   author: string;
+  likes: { id: number }[];
+  dislikes: { id: number }[];
+  postId: number;
 }
 const Post: React.FC<postProps> = ({
+  postId,
   postedAt,
   authorProfilePicture,
   author,
   image,
   authorId,
-  body
+  body,
+  likes = [],
+  dislikes = []
 }) => {
+  const queryClient = useQueryClient();
+  const { data: userData } = useQuery("my user data", getMyUserData);
+  const dislikePostMutation = useMutation(() => dislikePost(postId), {
+    onSuccess() {
+      queryClient.invalidateQueries("explore");
+      queryClient.invalidateQueries(["user posts", authorId]);
+    }
+  });
+  const unDislikePostMutation = useMutation(() => unDislikePost(postId), {
+    onSuccess() {
+      queryClient.invalidateQueries("explore");
+      queryClient.invalidateQueries(["user posts", authorId]);
+    }
+  });
+  const likePostMutation = useMutation(() => likePost(postId), {
+    onSuccess() {
+      queryClient.invalidateQueries("explore");
+      queryClient.invalidateQueries(["user posts", authorId]);
+    }
+  });
+  const unLikePostMutation = useMutation(() => unLikePost(postId), {
+    onSuccess() {
+      queryClient.invalidateQueries("explore");
+      queryClient.invalidateQueries(["user posts", authorId]);
+    }
+  });
+
+  const userLikedThePost = likes.find((el) => el.id === userData?.id);
+  const userDisikedThePost = dislikes.find((el) => el.id === userData?.id);
+
   const classes = useStyles();
   return (
     <Card className={classes.postContainer}>
       <CardHeader
-        avatar={<Link to={`/home/user/${authorId}`}><Avatar src={authorProfilePicture} /></Link>}
+        avatar={
+          <Link to={`/home/user/${authorId}`}>
+            <Avatar src={authorProfilePicture} />
+          </Link>
+        }
         title={author}
         subheader={prettyDate(postedAt)}
       />
@@ -74,6 +128,43 @@ const Post: React.FC<postProps> = ({
       {image && (
         <CardMedia style={{ height: 300 }} image={image} title="Paella dish" />
       )}
+      <CardActions disableSpacing>
+        <Box display="flex" alignItems="center">
+          <Box clone color={userLikedThePost ? "primary.main" : ""}>
+            <IconButton
+              onClick={() => {
+                userLikedThePost
+                  ? unLikePostMutation.mutate()
+                  : likePostMutation.mutate();
+              }}
+            >
+              <ThumbUpIcon />
+            </IconButton>
+          </Box>
+          <Typography>{likes.length}</Typography>
+        </Box>
+        <Box display="flex" alignItems="center">
+          <Box
+            clone
+            color={
+              dislikes.find((el) => el.id === userData?.id)
+                ? "primary.main"
+                : ""
+            }
+          >
+            <IconButton
+              onClick={() => {
+                userDisikedThePost
+                  ? unLikePostMutation.mutate()
+                  : dislikePostMutation.mutate();
+              }}
+            >
+              <ThumbDownIcon />
+            </IconButton>
+          </Box>
+          <Typography>{dislikes.length}</Typography>
+        </Box>
+      </CardActions>
     </Card>
   );
 };

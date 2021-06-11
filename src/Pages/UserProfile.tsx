@@ -127,10 +127,15 @@ function UserProfile() {
                 content,
                 createdAt,
                 id,
+                likes,
+                dislikes,
                 User: { firstName, lastName, profilePictureURL }
               }) => (
                 <li key={id}>
                   <Post
+                    postId={id}
+                    likes={likes}
+                    dislikes={dislikes}
                     authorProfilePicture={profilePictureURL}
                     author={firstName + " " + lastName}
                     authorId={authorId}

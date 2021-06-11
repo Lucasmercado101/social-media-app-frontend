@@ -1,6 +1,5 @@
 import Post from "./Post";
 import { makeStyles, CircularProgress, Box } from "@material-ui/core";
-import { subDays } from "date-fns";
 import NewPost from "./NewPost/NewPost";
 import { useInfiniteQuery } from "react-query";
 import { getExplore } from "../api";
@@ -41,10 +40,15 @@ function Explore() {
                 content,
                 createdAt,
                 id,
+                likes,
+                dislikes,
                 User: { firstName, lastName, profilePictureURL }
               }) => (
                 <li key={id}>
                   <Post
+                    postId={id}
+                    likes={likes}
+                    dislikes={dislikes}
                     authorProfilePicture={profilePictureURL}
                     author={firstName + " " + lastName}
                     authorId={authorId}
