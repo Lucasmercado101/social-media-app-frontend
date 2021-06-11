@@ -26,9 +26,11 @@ export function isLoggedIn() {
 interface Post {
   authorId: number;
   content: string;
+  updatedAt: string;
   createdAt: string;
   id: number;
-  updatedAt: string;
+  likes: { id: number }[];
+  dislikes: { id: number }[];
 }
 
 interface createPostParams {
@@ -169,4 +171,20 @@ export function getPublicUserPostsPaginated({
       `/users/${userId}/posts?${searchParams.toString()}`
     )
     .then((resp) => resp.data);
+}
+
+export function likePost(postId: number) {
+  return axios.post(`/user/like/post/${postId}`);
+}
+
+export function unLikePost(postId: number) {
+  return axios.delete(`/user/like/post/${postId}`);
+}
+
+export function dislikePost(postId: number) {
+  return axios.post(`/user/dislike/post/${postId}`);
+}
+
+export function unDislikePost(postId: number) {
+  return axios.delete(`/user/dislike/post/${postId}`);
 }
