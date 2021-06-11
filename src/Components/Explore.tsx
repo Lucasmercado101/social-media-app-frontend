@@ -18,15 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Explore() {
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status
-  } = useInfiniteQuery(
+  const { data, isFetching, isFetchingNextPage } = useInfiniteQuery(
     "explore",
     ({ pageParam = 1 }) => getExplore({ limit: 15, page: pageParam }),
     {
