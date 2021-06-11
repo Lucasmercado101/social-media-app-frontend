@@ -60,7 +60,7 @@ function UserProfile() {
     isFetchingNextPage,
     status
   } = useInfiniteQuery(
-    "explore",
+    ["user posts", userId],
     ({ pageParam = 1 }) =>
       getPublicUserPostsPaginated({
         limit: 15,
