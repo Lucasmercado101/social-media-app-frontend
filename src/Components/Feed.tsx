@@ -1,66 +1,115 @@
 import Post from "./Post";
-import { makeStyles } from "@material-ui/core";
-import { subDays } from "date-fns";
+import {
+  makeStyles,
+  Typography,
+  CircularProgress,
+  Box
+} from "@material-ui/core";
 import NewPost from "./NewPost/NewPost";
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQueryClient } from "react-query";
 import { getFeed } from "../api";
+import { useBottomScrollListener } from "react-bottom-scroll-listener";
 
 const useStyles = makeStyles((theme) => ({
   feedColumn: {
     display: "flex",
     flexDirection: "column",
     gap: 15,
-    paddingBottom: 15
+    paddingBottom: 15,
+    padding: 0,
+    margin: 0,
+    listStyleType: "none"
   }
 }));
 
-const dummyData = [
-  {
-    userId: 2,
-    id: 2,
-    username: "Samantha",
-    media: "https://picsum.photos/id/167/1000/1000",
-    contentImage: "https://picsum.photos/id/187/1000/1000",
-    body: "qui est esse"
-  },
-  {
-    username: "Ervin Howell",
-    userId: 1,
-    id: 1,
-    profilePic: "https://source.unsplash.com/200x200/?face",
-    body: "The Industrial Revolution and its consequences have been a disaster for the human race. They have greatly increased the life-expectancy of those of us who live in “advanced” countries, but they have destabilized society, have made life unfulfilling, have subjected human beings to indignities, have led to widespread psychological suffering (in the Third World to physical suffering as well) and have inflicted severe damage on the natural world. The continued development of technology will worsen the situation."
-  },
-  {
-    userId: 3,
-    username: "Patricia Lebsack",
-    id: 3,
-    profilePic: "https://picsum.photos/id/237/100/100",
-    contentImage: "https://picsum.photos/id/217/1000/1000",
-    body: "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
-  }
-];
-
 function Feed() {
-  const { data = [] } = useQuery("feed", getFeed);
+  const queryClient = useQueryClient();
+  const { data, isFetching, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery(
+      "feed",
+      ({ pageParam = 1 }) => getFeed({ limit: 15, page: pageParam }),
+      {
+        getNextPageParam: (lastPage) => lastPage.next?.page,
+        onSuccess(e) {
+          e.pages?.map((e) => {
+            e.results.forEach((item) => {
+              queryClient.setQueryData(
+                ["user data", String(item.id)],
+                item.User
+              );
+            });
+          });
+        }
+      }
+    );
+
+  useBottomScrollListener(fetchNextPage);
   const classes = useStyles();
 
   return (
-    <div>
+    <div style={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
       <div style={{ marginBottom: 15 }}>
         <NewPost />
       </div>
-      {/* <div className={classes.feedColumn}>
-        {dummyData.map(({ profilePic, id, username, body, contentImage }) => (
-          <Post
-            username={username}
-            date={subDays(new Date(), 4 * id)}
-            key={id}
-            body={body}
-            image={contentImage}
-            profilePictureUrl={profilePic}
-          />
-        ))}
-      </div> */}
+      {/* <EmptyPlaceHolder /> */}
+      {data && (
+        <ul className={classes.feedColumn}>
+          {data.pages.map(({ results }) =>
+            results.map(
+              ({
+                authorId,
+                content,
+                createdAt,
+                id,
+                likes,
+                dislikes,
+                User: { firstName, lastName, profilePictureURL }
+              }) => (
+                <li key={id}>
+                  <Post
+                    postId={id}
+                    likes={likes}
+                    dislikes={dislikes}
+                    authorProfilePicture={profilePictureURL}
+                    author={firstName + " " + lastName}
+                    authorId={authorId}
+                    body={content}
+                    postedAt={new Date(createdAt)}
+                  />
+                </li>
+              )
+            )
+          )}
+        </ul>
+      )}
+
+      {(isFetching || isFetchingNextPage) && (
+        <Box display="flex" justifyContent="center" mt={3}>
+          <CircularProgress size={60} />
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function EmptyPlaceHolder() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        placeItems: "center",
+        margin: "auto"
+      }}
+    >
+      <Typography
+        component="h2"
+        align="center"
+        style={{ fontStyle: "italic", opacity: 0.75 }}
+        variant="h5"
+      >
+        You have no friends! <br />
+        Go and add some
+      </Typography>
     </div>
   );
 }
