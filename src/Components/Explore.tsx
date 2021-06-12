@@ -29,7 +29,7 @@ function Explore() {
           e.pages?.map((e) => {
             e.results.forEach((item) => {
               queryClient.setQueryData(
-                ["user data", String(item.id)],
+                ["user data", String(item.User.id)],
                 item.User
               );
             });
