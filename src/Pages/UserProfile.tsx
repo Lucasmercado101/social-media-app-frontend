@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   IconButton,
   makeStyles,
   Toolbar,
@@ -61,7 +62,11 @@ function UserProfile() {
     sendFriendRequestToUser(userId)
   );
 
-  const { data, isLoading } = useInfiniteQuery(
+  const {
+    data,
+    isLoading: isLoadingPosts,
+    isFetching
+  } = useInfiniteQuery(
     ["user posts", userId],
     ({ pageParam = 1 }) =>
       getPublicUserPostsPaginated({
@@ -79,7 +84,10 @@ function UserProfile() {
     threshold: 10
   });
 
-  const { data: myUserData } = useQuery("my user data", getMyUserData);
+  const { data: myUserData, isLoading: isLoadingUserData } = useQuery(
+    "my user data",
+    getMyUserData
+  );
   const { data: userData } = useQuery(["user data", userId], () =>
     getPublicUserData(userId)
   );
@@ -120,7 +128,7 @@ function UserProfile() {
       />
       <Box mt={1}>
         <Typography align="center" variant="h4">
-          {isLoading
+          {isLoadingUserData
             ? "Loading..."
             : userData?.firstName + " " + userData?.lastName}
         </Typography>
@@ -186,6 +194,12 @@ function UserProfile() {
           )}
         </ul>
       )}
+
+      {isLoadingPosts ? (
+        <Box my={2} display="flex" justifyContent="center">
+          <CircularProgress size={50} />
+        </Box>
+      ) : null}
     </div>
   );
 }
