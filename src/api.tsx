@@ -45,8 +45,19 @@ export function getPosts() {
   return axios.get<Post[]>("/user/posts").then((resp) => resp.data);
 }
 
-export function getFeed() {
-  return axios.get<Post[]>("/user/feed").then((resp) => resp.data);
+interface getFeedProps {
+  limit: number;
+  page: number;
+}
+export function getFeed({ limit, page }: getFeedProps) {
+  return axios
+    .get<paginatedResponse<PostWithAuthorData>>("/user/feed", {
+      params: {
+        limit,
+        page
+      }
+    })
+    .then((resp) => resp.data);
 }
 
 interface PostWithAuthorData extends Post {
