@@ -11,7 +11,7 @@ import {
   useScrollTrigger
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useInfiniteQuery, useQuery, useQueryClient } from "react-query";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import {
   getMyUserData,
@@ -21,6 +21,7 @@ import {
 } from "../api";
 import Post from "../Components/Post";
 import { useMutation } from "react-query";
+import useRemoveFriend from "../Hooks/Mutations/useRemoveFriend";
 
 const useStyles = makeStyles((theme) => ({
   avatarRoot: {
@@ -54,19 +55,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function UserProfile() {
+  const queryClient = useQueryClient();
   const history = useHistory();
   const route = useRouteMatch();
   //@ts-ignore
   const userId = route.params.userId;
-  const sendFriendRequestMutation = useMutation(() =>
-    sendFriendRequestToUser(userId)
+  const sendFriendRequestMutation = useMutation(
+    () => sendFriendRequestToUser(userId),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries("my user data");
+      }
+    }
   );
 
-  const {
-    data,
-    isLoading: isLoadingPosts,
-    isFetching
-  } = useInfiniteQuery(
+  const { data, isLoading: isLoadingPosts } = useInfiniteQuery(
     ["user posts", userId],
     ({ pageParam = 1 }) =>
       getPublicUserPostsPaginated({
@@ -91,6 +94,7 @@ function UserProfile() {
   const { data: userData } = useQuery(["user data", userId], () =>
     getPublicUserData(userId)
   );
+  const { mutate: removeFriend } = useRemoveFriend();
 
   const hasSentFriendRequest = myUserData?.friendRequestsSent.find(
     (el) => el.id === +userId
@@ -99,6 +103,8 @@ function UserProfile() {
   const hasPendingFriendRequest = myUserData?.friendRequestsPending.find(
     (el) => el.id === +userId
   );
+
+  const isFriend = myUserData?.friends.find((el) => el.id === +userId);
 
   const classes = useStyles({ userBanner: "" });
   return (
@@ -138,6 +144,12 @@ function UserProfile() {
               <Button variant="outlined" disabled>
                 Friend request {hasPendingFriendRequest ? "pending" : "sent"}
               </Button>
+            ) : isFriend ? (
+              <Box clone color="error.main" borderColor="error.main">
+                <Button onClick={() => removeFriend(userId)} variant="outlined">
+                  Remove friend
+                </Button>
+              </Box>
             ) : (
               <Button
                 onClick={() => sendFriendRequestMutation.mutate()}

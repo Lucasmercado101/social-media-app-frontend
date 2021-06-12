@@ -28,9 +28,11 @@ import {
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import CloseIcon from "@material-ui/icons/Close";
 import CheckIcon from "@material-ui/icons/Check";
+import useRemoveFriend from "../Hooks/Mutations/useRemoveFriend";
 
 function Friends() {
   const queryClient = useQueryClient();
+  const removeFriend = useRemoveFriend();
   const removePendingFriend = useMutation(
     (userId: number) => removePendingFriendRequest(userId),
     {
@@ -49,14 +51,6 @@ function Friends() {
   );
   const acceptFriendRequestMutation = useMutation(
     (userId: number) => acceptFriendRequest(userId),
-    {
-      onSettled() {
-        queryClient.invalidateQueries("my user friends");
-      }
-    }
-  );
-  const removeFriend = useMutation(
-    (userId: number) => removeBefriendedFriend(userId),
     {
       onSettled() {
         queryClient.invalidateQueries("my user friends");
