@@ -81,18 +81,6 @@ function Explore() {
           <CircularProgress size={60} />
         </Box>
       )}
-      {/* <div className={classes.feedColumn}>
-        {dummyData.map(({ profilePic, id, username, body, contentImage }) => (
-          <Post
-            username={username}
-            date={subDays(new Date(), 4 * id)}
-            key={id}
-            body={body}
-            image={contentImage}
-            profilePictureUrl={profilePic}
-          />
-        ))}
-      </div> */}
     </div>
   );
 }
