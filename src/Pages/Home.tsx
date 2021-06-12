@@ -12,7 +12,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import UserProfile from "./UserProfile";
 import { useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
-import { getMyUserData } from "../api";
+import { getMyUserData, getAllTypeFriends } from "../api";
 
 type locationAsNumberFn = (location: string) => number;
 const locationAsNumber = function (currentLocation) {
@@ -37,6 +37,12 @@ function Home() {
   const [navigationValue, setNavigationValue] = useState(() =>
     locationAsNumber(location)
   );
+
+  useEffect(() => {
+    getAllTypeFriends().then((data) =>
+      queryClient.setQueryData("my user friends", data)
+    );
+  }, []);
 
   useEffect(() => {
     setNavigationValue(locationAsNumber(location));
