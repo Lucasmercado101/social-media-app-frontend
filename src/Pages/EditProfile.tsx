@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   AppBar,
   IconButton,
@@ -11,7 +11,12 @@ import {
   Button,
   InputAdornment,
   CircularProgress,
-  Collapse
+  Collapse,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useHistory } from "react-router-dom";
@@ -20,9 +25,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import EditIcon from "@material-ui/icons/Edit";
 import { editProfileMachine } from "./editProfileMachine";
 import { useMachine } from "@xstate/react";
-import { getMyUserData, userData } from "../api";
-import { useQuery } from "react-query";
+import { getMyUserData, userData, deleteAccount } from "../api";
+import { useQuery, useMutation } from "react-query";
 import { Alert } from "@material-ui/lab";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 function EditProfile() {
   const { data, isLoading } = useQuery("my user data", getMyUserData, {
@@ -35,6 +41,27 @@ function EditProfile() {
     disableHysteresis: true,
     threshold: 10
   });
+
+  const { mutate: deleteAccountMutation, error } = useMutation(
+    (password: string) => deleteAccount(password),
+    {
+      onSuccess() {
+        history.replace("/");
+      }
+    }
+  );
+
+  const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setPassword("");
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -54,6 +81,13 @@ function EditProfile() {
             </IconButton>
           </Box>
           <Typography variant="h6">Edit profile</Typography>
+          <Box ml="auto">
+            <Box color="error.dark" clone>
+              <IconButton onClick={handleClickOpen} size="small" edge="end">
+                <DeleteForeverIcon />
+              </IconButton>
+            </Box>
+          </Box>
         </Toolbar>
       </AppBar>
       {isLoading && (
@@ -62,6 +96,46 @@ function EditProfile() {
         </Box>
       )}
       {data && <Form userData={data} />}
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>
+          {"Are you sure you want to delete your account?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This action is <strong>irreversible.</strong>
+            <br />
+            Enter your password to confirm:
+          </DialogContentText>
+          <TextField
+            autoFocus
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            margin="dense"
+            label="Password"
+            type="password"
+            fullWidth
+          />
+          <Box color="error.main">
+            <>{error && "Wrong password"}</>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            disabled={!password}
+            onClick={() => {
+              deleteAccountMutation(password);
+            }}
+            color="primary"
+            autoFocus
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
