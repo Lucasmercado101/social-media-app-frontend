@@ -2,6 +2,7 @@ import {
   AppBar,
   Avatar,
   Box,
+  Button,
   IconButton,
   makeStyles,
   Toolbar,
@@ -11,8 +12,14 @@ import {
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useInfiniteQuery, useQuery } from "react-query";
 import { useRouteMatch, useHistory } from "react-router-dom";
-import { getPublicUserData, getPublicUserPostsPaginated } from "../api";
+import {
+  getMyUserData,
+  getPublicUserData,
+  getPublicUserPostsPaginated,
+  sendFriendRequestToUser
+} from "../api";
 import Post from "../Components/Post";
+import { useMutation } from "react-query";
 
 const useStyles = makeStyles((theme) => ({
   avatarRoot: {
@@ -50,6 +57,9 @@ function UserProfile() {
   const route = useRouteMatch();
   //@ts-ignore
   const userId = route.params.userId;
+  const sendFriendRequestMutation = useMutation(() =>
+    sendFriendRequestToUser(userId)
+  );
 
   const { data, isLoading } = useInfiniteQuery(
     ["user posts", userId],
@@ -63,17 +73,25 @@ function UserProfile() {
       getNextPageParam: (lastPage) => lastPage.next?.page
     }
   );
-  //TODO: do something if this profile is the logged in user's one
-  // redirect them to their own, and in Post.jsx
-  // prevent them from redirecting here
+
   const scrolled = useScrollTrigger({
     disableHysteresis: true,
     threshold: 10
   });
 
+  const { data: myUserData } = useQuery("my user data", getMyUserData);
   const { data: userData } = useQuery(["user data", userId], () =>
     getPublicUserData(userId)
   );
+
+  const hasSentFriendRequest = myUserData?.friendRequestsSent.find(
+    (el) => el.id === +userId
+  );
+
+  const hasPendingFriendRequest = myUserData?.friendRequestsPending.find(
+    (el) => el.id === +userId
+  );
+
   const classes = useStyles({ userBanner: "" });
   return (
     <div>
@@ -106,6 +124,26 @@ function UserProfile() {
             ? "Loading..."
             : userData?.firstName + " " + userData?.lastName}
         </Typography>
+        {myUserData && myUserData?.id !== +userId && (
+          <Box mt={2} display="flex" justifyContent="center">
+            {hasSentFriendRequest || hasPendingFriendRequest ? (
+              <Button variant="outlined" disabled>
+                Friend request {hasPendingFriendRequest ? "pending" : "sent"}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => sendFriendRequestMutation.mutate()}
+                variant="contained"
+                color="primary"
+              >
+                Send friend request
+              </Button>
+            )}
+            {/* <Box clone color="error.main">
+                <Button variant="outlined">Remove Friend</Button>
+              </Box> */}
+          </Box>
+        )}
       </Box>
 
       <Box my={4}>
