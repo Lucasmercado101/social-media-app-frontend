@@ -3,6 +3,7 @@ import { makeStyles, CircularProgress, Box } from "@material-ui/core";
 import NewPost from "./NewPost/NewPost";
 import { useInfiniteQuery, useQueryClient } from "react-query";
 import { getExplore } from "../api";
+import { useBottomScrollListener } from "react-bottom-scroll-listener";
 
 const useStyles = makeStyles((theme) => ({
   exploreColumnList: {
@@ -18,20 +19,25 @@ const useStyles = makeStyles((theme) => ({
 
 function Explore() {
   const queryClient = useQueryClient();
-  const { data, isFetching, isFetchingNextPage } = useInfiniteQuery(
-    "explore",
-    ({ pageParam = 1 }) => getExplore({ limit: 15, page: pageParam }),
-    {
-      getNextPageParam: (lastPage) => lastPage.next?.page,
-      onSuccess(e) {
-        e.pages?.map((e) => {
-          e.results.forEach((item) => {
-            queryClient.setQueryData(["user data", String(item.id)], item.User);
+  const { data, isFetching, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery(
+      "explore",
+      ({ pageParam = 1 }) => getExplore({ limit: 15, page: pageParam }),
+      {
+        getNextPageParam: (lastPage) => lastPage.next?.page,
+        onSuccess(e) {
+          e.pages?.map((e) => {
+            e.results.forEach((item) => {
+              queryClient.setQueryData(
+                ["user data", String(item.id)],
+                item.User
+              );
+            });
           });
-        });
+        }
       }
-    }
-  );
+    );
+  useBottomScrollListener(fetchNextPage);
   const classes = useStyles();
 
   return (
