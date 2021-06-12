@@ -249,3 +249,11 @@ export function getAllTypeFriends() {
     .get<getAllTypeFriendsResponse>(`/user/friends/`)
     .then((resp) => resp.data);
 }
+
+export function deleteAccount(password: string) {
+  return axios.delete("/user", {
+    data: {
+      password
+    }
+  });
+}
