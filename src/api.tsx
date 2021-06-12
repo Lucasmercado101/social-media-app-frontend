@@ -93,6 +93,9 @@ export interface userData {
   firstName: string;
   lastName: string;
   profilePictureURL?: string;
+  friendRequestsSent: { id: number }[];
+  friends: { id: number }[];
+  friendRequestsPending: { id: number }[];
 }
 
 export function getMyUserData() {
@@ -187,4 +190,50 @@ export function dislikePost(postId: number) {
 
 export function unDislikePost(postId: number) {
   return axios.delete(`/user/dislike/post/${postId}`);
+}
+
+export function sendFriendRequestToUser(userId: number) {
+  return axios.post(`/user/friends/send-request/${userId}`);
+}
+
+export function removeFriendRequestSentToUser(userId: number) {
+  return axios.delete(`/user/friends/send-request/${userId}`);
+}
+
+export function removePendingFriendRequest(userId: number) {
+  return axios.delete(`/user/friends/pending-request/${userId}`);
+}
+
+export function acceptFriendRequest(userId: number) {
+  return axios.post(`/user/friends/pending-request/${userId}`);
+}
+
+export function removeBefriendedFriend(userId: number) {
+  return axios.delete(`/user/friends/befriended/${userId}`);
+}
+
+interface getAllTypeFriendsResponse {
+  friendRequestsSent: {
+    firstName: string;
+    lastName: string;
+    profilePictureURL?: string;
+    id: number;
+  }[];
+  friends: {
+    firstName: string;
+    lastName: string;
+    profilePictureURL?: string;
+    id: number;
+  }[];
+  friendRequestsPending: {
+    firstName: string;
+    lastName: string;
+    profilePictureURL?: string;
+    id: number;
+  }[];
+}
+export function getAllTypeFriends() {
+  return axios
+    .get<getAllTypeFriendsResponse>(`/user/friends/`)
+    .then((resp) => resp.data);
 }
