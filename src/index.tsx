@@ -6,12 +6,14 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import ScrollToTop from "./ScrollToTop";
 
 const client = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
+      <ScrollToTop />
       <QueryClientProvider client={client}>
         <ThemeProvider>
           <CssBaseline />
