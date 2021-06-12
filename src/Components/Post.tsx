@@ -85,24 +85,28 @@ const Post: React.FC<postProps> = ({
   const { data: userData } = useQuery("my user data", getMyUserData);
   const dislikePostMutation = useMutation(() => dislikePost(postId), {
     onSuccess() {
+      queryClient.invalidateQueries("feed");
       queryClient.invalidateQueries("explore");
       queryClient.invalidateQueries("user posts");
     }
   });
   const unDislikePostMutation = useMutation(() => unDislikePost(postId), {
     onSuccess() {
+      queryClient.invalidateQueries("feed");
       queryClient.invalidateQueries("explore");
       queryClient.invalidateQueries("user posts");
     }
   });
   const likePostMutation = useMutation(() => likePost(postId), {
     onSuccess() {
+      queryClient.invalidateQueries("feed");
       queryClient.invalidateQueries("explore");
       queryClient.invalidateQueries("user posts");
     }
   });
   const unLikePostMutation = useMutation(() => unLikePost(postId), {
     onSuccess() {
+      queryClient.invalidateQueries("feed");
       queryClient.invalidateQueries("explore");
       queryClient.invalidateQueries("user posts");
     }
