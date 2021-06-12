@@ -13,7 +13,8 @@ import {
   ListItemText,
   Avatar,
   ListItemAvatar,
-  ListItemSecondaryAction
+  ListItemSecondaryAction,
+  CircularProgress
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useHistory } from "react-router-dom";
@@ -68,7 +69,10 @@ function Friends() {
     threshold: 10
   });
 
-  const { data: friendsData } = useQuery("my user friends", getAllTypeFriends);
+  const { data: friendsData, isLoading: isLoadingFriendsData } = useQuery(
+    "my user friends",
+    getAllTypeFriends
+  );
 
   const [tabValue, setTabValue] = useState(0);
 
@@ -96,58 +100,68 @@ function Friends() {
           <Typography variant="h6">Friends</Typography>
         </Toolbar>
       </AppBar>
-      <Tabs
-        value={tabValue}
-        onChange={handleChange}
-        indicatorColor="primary"
-        textColor="primary"
-        variant="fullWidth"
-      >
-        <Tab label="Friends" />
-        <Tab label="Sent" />
-        <Tab label="Pending" />
-      </Tabs>
-      {tabValue === 0 && (
-        <List>
-          {friendsData?.friends.map((friend) => (
-            <FriendListItem
-              key={friend.id}
-              onRemove={() => removeFriend.mutate(friend.id)}
-              data={friend}
-            />
-          ))}
-        </List>
-      )}
-      {tabValue === 1 && (
-        <List>
-          {friendsData?.friendRequestsSent.map((friend) => (
-            <FriendListItem
-              key={friend.id}
-              data={friend}
-              onRemove={() => removeSentFriendRequest.mutate(friend.id)}
-            />
-          ))}
-        </List>
-      )}
-      {tabValue === 2 && (
-        <List>
-          {friendsData?.friendRequestsPending.map((friend) => (
-            <FriendListItem
-              key={friend.id}
-              data={friend}
-              onRemove={() => removePendingFriend.mutate(friend.id)}
-              secondaryActions={
-                <IconButton
-                  onClick={() => acceptFriendRequestMutation.mutate(friend.id)}
-                  size="small"
-                  edge="end"
-                >
-                  <CheckIcon />
-                </IconButton>
-              }
-            />
-          ))}
-        </List>
+      {isLoadingFriendsData ? (
+        <Box mt={5} display="flex" justifyContent="center">
+          <CircularProgress size={50} />
+        </Box>
+      ) : (
+        <>
+          <Tabs
+            value={tabValue}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+          >
+            <Tab label="Friends" />
+            <Tab label="Sent" />
+            <Tab label="Pending" />
+          </Tabs>
+          {tabValue === 0 && (
+            <List>
+              {friendsData?.friends.map((friend) => (
+                <FriendListItem
+                  key={friend.id}
+                  onRemove={() => removeFriend.mutate(friend.id)}
+                  data={friend}
+                />
+              ))}
+            </List>
+          )}
+          {tabValue === 1 && (
+            <List>
+              {friendsData?.friendRequestsSent.map((friend) => (
+                <FriendListItem
+                  key={friend.id}
+                  data={friend}
+                  onRemove={() => removeSentFriendRequest.mutate(friend.id)}
+                />
+              ))}
+            </List>
+          )}
+          {tabValue === 2 && (
+            <List>
+              {friendsData?.friendRequestsPending.map((friend) => (
+                <FriendListItem
+                  key={friend.id}
+                  data={friend}
+                  onRemove={() => removePendingFriend.mutate(friend.id)}
+                  secondaryActions={
+                    <IconButton
+                      onClick={() =>
+                        acceptFriendRequestMutation.mutate(friend.id)
+                      }
+                      size="small"
+                      edge="end"
+                    >
+                      <CheckIcon />
+                    </IconButton>
+                  }
+                />
+              ))}
+            </List>
+          )}
+        </>
       )}
     </div>
   );
