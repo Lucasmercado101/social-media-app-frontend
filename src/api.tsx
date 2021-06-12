@@ -65,6 +65,7 @@ interface PostWithAuthorData extends Post {
     firstName: string;
     lastName: string;
     profilePictureURL?: string;
+    id: number;
   };
 }
 
