@@ -1,7 +1,7 @@
 import Post from "./Post";
 import { makeStyles, CircularProgress, Box } from "@material-ui/core";
 import NewPost from "./NewPost/NewPost";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, useQueryClient } from "react-query";
 import { getExplore } from "../api";
 
 const useStyles = makeStyles((theme) => ({
@@ -17,11 +17,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Explore() {
+  const queryClient = useQueryClient();
   const { data, isFetching, isFetchingNextPage } = useInfiniteQuery(
     "explore",
     ({ pageParam = 1 }) => getExplore({ limit: 15, page: pageParam }),
     {
-      getNextPageParam: (lastPage) => lastPage.next?.page
+      getNextPageParam: (lastPage) => lastPage.next?.page,
+      onSuccess(e) {
+        e.pages?.map((e) => {
+          e.results.forEach((item) => {
+            queryClient.setQueryData(["user data", String(item.id)], item.User);
+          });
+        });
+      }
     }
   );
   const classes = useStyles();
